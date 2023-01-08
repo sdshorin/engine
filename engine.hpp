@@ -5,6 +5,7 @@
 #include "VisualServer.h"
 #include "camera.hpp"
 
+
 #include <iostream>
 
 class TreeObject {
@@ -29,6 +30,8 @@ class Triangle: public TreeObject {
 
 class Engine {
 
+	bool process_events(float delta);
+	void process_keyboard_event(SDL_Keycode sym, float delta);
 public:
 	VisualServer *visual_server;
 	TreeObject* root;

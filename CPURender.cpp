@@ -39,54 +39,32 @@ void CPURender::draw_polygon(std::vector<glm::vec4>& points, const Camera *camer
 	std::cout << "VisualServer draw_polygon \n";
 
 	for (int i = 0; i < points.size(); i += 3) {
-		glm::vec4 v0, v1, v2;
+		std::vector<glm::vec4> v = {points[i], points[i + 1], points[i + 2]};
+
 		glm::mat4 camera_matrix = camera->get_camera_matrix();
 
         camera_matrix = camera->get_projection_matrix() * camera_matrix;
-		
-		// v0 = points[i];
-		// v1 = points[i + 1];
-		// v2 = points[i + 2];
-		v0 = camera_matrix * points[i];
-		v1 = camera_matrix * points[i + 1];
-		v2 = camera_matrix * points[i + 2];
-
-        // glm::vec4 test = v0;
-        // std::reference_wrapper<glm::vec<4, float, glm::packed_highp>> test = std::ref(v0);
-        // test = v1;
+        // camera_matrix = camera_matrix;
 
 
-		// for (auto& point : {std::ref(v0), std::ref(v1), std::ref(v2)}) {
-        //     point = v0;
-		// 	point = camera_matrix * point;
-		// 	point = point / point.w;
-		// 	point.x *= 
-		// }
+		for (int i = 0; i < 3; ++i) {
 
-		// for 
+			v[i] = camera_matrix * v[i];
+			v[i] = v[i] / v[i].w;
 
-		v0 = v0 / v0.w;
-		v1 = v1 / v1.w;
-		v2 = v2 / v2.w;
+			v[i].x = v[i].x * 0.5 + 0.5f;
+			v[i].y = -v[i].y * 0.5 + 0.5f;
 
-        v0.x *= settings->window_width;
-        v0.y *= settings->window_high;
-        v1.x *= settings->window_width;
-        v1.y *= settings->window_high;
-        v2.x *= settings->window_width;
-        v2.y *= settings->window_high;
+			v[i].x *= settings->window_width;
+        	v[i].y *= settings->window_high;
 
 
-		Rectangle rect(v0.x, v0.y);
-		std::cout << "v0:"  << glm::to_string(v0).c_str()   << "\n";
-		std::cout << "rect: "  << rect  << "\n";
+		}
 
-		std::cout << "v1:"  << glm::to_string(v1).c_str()   << "\n";
-		rect.add_point(v1.x, v1.y);
-		std::cout << "rect: "  << rect  << "\n";
-
-		std::cout << "v2:"  << glm::to_string(v2).c_str()   << "\n";
-		rect.add_point(v2.x, v2.y);
+		Rectangle rect(v[0].x, v[0].y);
+		rect.add_point(v[1].x, v[1].y);
+		rect.add_point(v[2].x, v[2].y);
+       
 		std::cout << "rect: "  << rect  << "\n";
 
         rect.x = std::max(0.0f, rect.x);
@@ -95,17 +73,17 @@ void CPURender::draw_polygon(std::vector<glm::vec4>& points, const Camera *camer
         rect.size_y = std::min(settings->window_high - rect.y, rect.size_y);
 
 
-		std::cout << "volume: "  << edge_function(v0, v1, v2) / 2   << "\n";
-        float triangle_square = edge_function(v0, v1, v2);
+		std::cout << "volume: "  << edge_function(v[0], v[1], v[2]) / 2   << "\n";
+        float triangle_square = edge_function(v[0], v[1], v[2]);
 
-        for (int x = rect.x; x < rect.size_x; ++x) {
+        for (int x = rect.x; x < rect.x + rect.size_x; ++x) {
             // std::cout << "|";
-            for (int y = rect.y; y < rect.size_y; ++y) {
+            for (int y = rect.y; y < rect.y + rect.size_y; ++y) {
                 glm::vec4 point(x, y, 0, 1);
 
-                float e_1 = edge_function(v1, v2, point) / triangle_square;
-                float e_2 = edge_function(v0, v2, point) / triangle_square;
-                float e_3 = edge_function(v0, v1, point) / triangle_square;
+                float e_1 = edge_function(v[0], v[1], point) / triangle_square;
+                float e_2 = edge_function(v[1], v[2], point) / triangle_square;
+                float e_3 = edge_function(v[2], v[0], point) / triangle_square;
 
                 if (std::signbit(e_1) == std::signbit(e_2) && std::signbit(e_2) == std::signbit(e_3)) {
                         int32_t a8 = 255;
@@ -117,6 +95,11 @@ void CPURender::draw_polygon(std::vector<glm::vec4>& points, const Camera *camer
 
                     // std::cout << x << " " << y << "\n";
                 } else {
+					// int32_t r8 = int32_t(((std::signbit(e_1))? 1 : 0) * 255.0f);
+					// int32_t g8 = int32_t(((std::signbit(e_2))? 1 : 0) * 255.0f);
+					// int32_t b8 = int32_t(((std::signbit(e_3))? 1 : 0) * 255.0f);
+
+					// frame_buffer[y * settings->window_width + x] = r8 << 24 | g8 << 16 | b8 << 8 | r8;
                     // std::cout << "0";
                 }
             }

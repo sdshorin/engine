@@ -16,11 +16,11 @@ class BaseRender {
 class VisualServer {
 	GraphicSettings* settings;
 	CPURender* render;
-	Camera *camera;
 	// GLFWwindow* window;
 	SDL_Window* window;
 	int32_t* frame_buffer;
 public:
+	Camera *camera;
 	VisualServer();
 	~VisualServer();
 	void InitGraphic();
