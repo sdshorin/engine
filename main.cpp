@@ -1,5 +1,5 @@
 #include "engine.hpp"
-
+#include "Triangle.hpp"
 
 int main() {
 	Engine* engine = new Engine;

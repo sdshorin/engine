@@ -1,17 +1,5 @@
-#include "engine.hpp"
-
-
-
-void TreeObject::draw(VisualServer* server) const {
-    for (const TreeObject* child: childrens) {
-        child->draw(server);
-    }
-    draw_self(server);
-}
-void TreeObject::draw_self(VisualServer* server) const {
-
-}
-
+#include "Triangle.hpp"
+#include <iostream>
 
 void Triangle::draw_self(VisualServer* server) const {
     std::cout << "Draw Triangle\n";
@@ -23,11 +11,3 @@ void Triangle::draw_self(VisualServer* server) const {
     server->draw_polygon(triangle);
     
 }
-
-void TreeObject::add_child(TreeObject* node) {
-    childrens.push_back(node);
-}
-
-
-
-

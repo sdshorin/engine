@@ -17,7 +17,7 @@ Camera::Camera() {
     front = glm::vec3(0.0, 0.0, -1.0);
     up = glm::vec3(0.0, 1.0, 0.0);
     camera_matrix  = glm::lookAt(position, position + front, up);
-    speed = 10;
+    speed = 1;
 
     projection_matrix = glm::perspective(
             glm::radians(45.0f),    // field of view
