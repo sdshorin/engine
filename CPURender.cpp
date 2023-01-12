@@ -35,7 +35,7 @@ float edge_function(glm::vec4& v0, glm::vec4& v1, glm::vec4& v2) {
 	return (v1.x - v0.x) * (v2.y - v0.y) - (v1.y - v0.y) * (v2.x - v0.x);
 }
 
-void CPURender::draw_polygon(std::vector<glm::vec4>& points, const Camera *camera, const GraphicSettings* settings, int32_t* frame_buffer) {
+void CPURender::draw_polygon(const std::vector<glm::vec4>& points, const Camera *camera, const GraphicSettings* settings, int32_t* frame_buffer) {
 	std::cout << "VisualServer draw_polygon \n";
 
 	for (int i = 0; i < points.size(); i += 3) {

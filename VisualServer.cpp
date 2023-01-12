@@ -18,7 +18,7 @@ void VisualServer::flush() {
 	}
 }
 
-void VisualServer::draw_polygon(std::vector<glm::vec4>& points) {
+void VisualServer::draw_polygon(const std::vector<glm::vec4>& points) {
 	render->draw_polygon(points, camera, settings, frame_buffer);
 }
 

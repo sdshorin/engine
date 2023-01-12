@@ -7,5 +7,5 @@
 
 class CPURender {
     public:
-	void draw_polygon(std::vector<glm::vec4>& points, const Camera *camera, const GraphicSettings* settings, int32_t* frame_buffer);
+	void draw_polygon(const std::vector<glm::vec4>& points, const Camera *camera, const GraphicSettings* settings, int32_t* frame_buffer);
 };

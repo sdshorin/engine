@@ -27,7 +27,7 @@ public:
 	void flush();
 	void RenderScreen();
 	// void DrawObject();
-	void draw_polygon(std::vector<glm::vec4>& points);
+	void draw_polygon(const std::vector<glm::vec4>& points);
 };
 
 
