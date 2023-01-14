@@ -8,6 +8,6 @@ void Triangle::draw_self(VisualServer* server) const {
     triangle.emplace_back(0.0, 0.0, 1.0, 1.0);
     triangle.emplace_back(1.0, 0.0, 0.0, 1.0);
     triangle.emplace_back(0.0, 1.0, 0.0, 1.0);
-    server->draw_polygon(triangle);
+    // server->draw_polygon(triangle);
     
 }

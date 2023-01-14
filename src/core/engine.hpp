@@ -17,8 +17,16 @@ class Engine {
 	void process_keyboard_event(SDL_Keycode sym, float delta);
 public:
 	VisualServer *visual_server;
-	TreeObject* root;
+	TreeObject root;
 
+	static Engine& getInstance()
+	{
+		static Engine instance;
+		return instance;
+    }
+ 	Engine(Engine const&) = delete;
+    void operator=(Engine const&)  = delete;
+	
 	Engine();
 	void Run();
 	void InputEvent();

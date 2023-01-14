@@ -18,10 +18,19 @@ void VisualServer::flush() {
 	}
 }
 
-void VisualServer::draw_polygon(const std::vector<glm::vec4>& points) {
-	render->draw_polygon(points, camera, settings, frame_buffer);
+// void VisualServer::draw_polygon(const std::vector<glm::vec4>& points) {
+// 	render->draw_polygon(points, camera, settings, frame_buffer);
+// }
+
+void VisualServer::draw_mesh(BaseVisualStorage* data) {
+    render->draw_mesh(data, camera, settings, frame_buffer);
+    // shader.
+
 }
 
+BaseVisualStorage* VisualServer::create_storage() {
+    return render->create_storage();
+}
 
 void VisualServer::InitGraphic() {
 

@@ -6,7 +6,6 @@
 
 
 Engine::Engine() {
-    root = new TreeObject;
 }
 
 void Engine::Run() {
@@ -19,7 +18,7 @@ void Engine::Run() {
         }
         visual_server->flush();
         // root->process(0.02);
-        root->draw(visual_server);
+        root.draw(visual_server);
         visual_server->RenderScreen();
         usleep(200000);
     }

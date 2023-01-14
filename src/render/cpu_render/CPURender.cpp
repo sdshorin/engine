@@ -1,5 +1,6 @@
 
 #include "CPURender.hpp"
+
 # include <vector>
 # include <glm/glm.hpp>
 
@@ -35,15 +36,24 @@ float edge_function(glm::vec4& v0, glm::vec4& v1, glm::vec4& v2) {
 	return (v1.x - v0.x) * (v2.y - v0.y) - (v1.y - v0.y) * (v2.x - v0.x);
 }
 
-void CPURender::draw_polygon(const std::vector<glm::vec4>& points, const Camera *camera, const GraphicSettings* settings, int32_t* frame_buffer) {
-	std::cout << "VisualServer draw_polygon \n";
+void CPURender::draw_mesh(BaseVisualStorage* data, const Camera *camera, const GraphicSettings* settings, int32_t* frame_buffer) {
+	std::cout << "VisualServer draw_mesh \n";
+
+	CPUVisualStorage *store = dynamic_cast<CPUVisualStorage*>(data);
+	if (!store) {
+		std::cout << "VisualServer wrong storage! \n";
+	}
+
+	const std::vector<Point>& points = store->data;
+	std::cout << "VisualServer pointssize: " << points.size() << "\n";
+	
+	glm::mat4 camera_matrix = camera->get_camera_matrix();
+
+	camera_matrix = camera->get_projection_matrix() * camera_matrix;
 
 	for (int i = 0; i < points.size(); i += 3) {
-		std::vector<glm::vec4> v = {points[i], points[i + 1], points[i + 2]};
+		std::vector<glm::vec4> v = {points[i].pos, points[i + 1].pos, points[i + 2].pos};
 
-		glm::mat4 camera_matrix = camera->get_camera_matrix();
-
-        camera_matrix = camera->get_projection_matrix() * camera_matrix;
         // camera_matrix = camera_matrix;
 
 
@@ -104,13 +114,20 @@ void CPURender::draw_polygon(const std::vector<glm::vec4>& points, const Camera 
                 }
             }
             // std::cout << "|\n";
-
         }
-
-		// rect.
-
-
-
 	}
 
 }
+
+
+BaseVisualStorage* CPURender::create_storage() {
+	CPUVisualStorage* store = new CPUVisualStorage;
+	storages.push_back(store);
+	return store;
+}
+
+
+
+
+
+

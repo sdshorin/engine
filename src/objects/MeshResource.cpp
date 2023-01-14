@@ -1,5 +1,5 @@
 # include <glm/glm.hpp>
-#include "Mesh.hpp"
+#include "MeshResource.hpp"
 #include <iostream>
 #include "VisualServer.h"
 #include <sstream>
@@ -7,7 +7,7 @@
 // #include <sstream>
 #include <string>
 #include <fstream>
-
+#include "engine.hpp"
 
 glm::vec4 parse_point(std::istringstream& iss) {
     float x, y, z;
@@ -32,10 +32,10 @@ std::vector<glm::vec4> build_triangulated_polygon(const std::vector<glm::vec4>& 
     return triangles;
 }
 
-void Mesh::load_obj_file(std::string path) {
+MeshResource::MeshResource(std::string path) {
     std::ifstream input(path);
     std::vector<glm::vec4> points;
-    triangles = {};
+    std::vector<glm::vec4> triangles = {};
 
     for( std::string line; getline( input, line ); )
     {
@@ -60,10 +60,12 @@ void Mesh::load_obj_file(std::string path) {
         i += 3;
     }
 
+    storage = Engine::getInstance().visual_server->create_storage();
+    storage->load_pos(triangles);
+    storage->commit();
 }
 
-void Mesh::draw_self(VisualServer* server) const {
-    std::cout << "Draw Mesh\n";
-    server->draw_polygon(triangles);
+BaseVisualStorage* MeshResource::GetStorage() const {
+    return storage;
 }
 
