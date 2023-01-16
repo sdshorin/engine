@@ -2,7 +2,7 @@
 
 #include "camera.hpp"
 #include "CPURender.hpp"
-#include <SDL2/SDL.h> 
+
 // #define GL_SILENCE_DEPRECATION
 // #include <GLFW/glfw3.h>
 #include "BaseVisualStorage.hpp"
@@ -15,14 +15,11 @@ class BaseRender {
 class VisualServer {
 
 	GraphicSettings* settings;
-	CPURender* render;
-	// GLFWwindow* window;
-	SDL_Window* window;
-	int32_t* frame_buffer;
+	CPURender* render;	
 public:
 	Camera *camera;
 	VisualServer();
-	~VisualServer();
+	
 	void InitGraphic();
 	void flush();
 	void RenderScreen();
