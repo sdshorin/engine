@@ -36,8 +36,16 @@ float edge_function(glm::vec4& v0, glm::vec4& v1, glm::vec4& v2) {
 	return (v1.x - v0.x) * (v2.y - v0.y) - (v1.y - v0.y) * (v2.x - v0.x);
 }
 
-void CPURender::draw_mesh(BaseVisualStorage* data, const Camera *camera, const GraphicSettings* settings, int32_t* frame_buffer) {
+
+
+void CPURender::draw_mesh(BaseVisualStorage* data, const BaseShader* shader_params, const GraphicSettings* settings, int32_t* frame_buffer) {
 	std::cout << "VisualServer draw_mesh \n";
+
+	ShaderImplementation* shader_imp = GetShader(shader_params->type); 
+	if (!shader_imp) {
+		throw std::invalid_argument("Can't find shader");
+	}
+	shader_imp->LoadParams(shader_params);
 
 	CPUVisualStorage *store = dynamic_cast<CPUVisualStorage*>(data);
 	if (!store) {
@@ -45,35 +53,31 @@ void CPURender::draw_mesh(BaseVisualStorage* data, const Camera *camera, const G
 	}
 
 	const std::vector<Point>& points = store->data;
-	std::cout << "VisualServer pointssize: " << points.size() << "\n";
+	std::cout << "VisualServer points size: " << points.size() << "\n";
 	
-	glm::mat4 camera_matrix = camera->get_camera_matrix();
-
-	camera_matrix = camera->get_projection_matrix() * camera_matrix;
-
 	for (int i = 0; i < points.size(); i += 3) {
-		std::vector<glm::vec4> v = {points[i].pos, points[i + 1].pos, points[i + 2].pos};
-
-        // camera_matrix = camera_matrix;
-
+		Point p[3] = {points[i], points[i + 1], points[i + 2]};
 
 		for (int i = 0; i < 3; ++i) {
 
-			v[i] = camera_matrix * v[i];
-			v[i] = v[i] / v[i].w;
+			p[i].pos = p[i].pos / p[i].pos.w;
 
-			v[i].x = v[i].x * 0.5 + 0.5f;
-			v[i].y = -v[i].y * 0.5 + 0.5f;
+			p[i] = shader_imp->VertexShader(p[i]);
+			
+			p[i].pos = p[i].pos / p[i].pos.w;
 
-			v[i].x *= settings->window_width;
-        	v[i].y *= settings->window_high;
+			p[i].pos.x = p[i].pos.x * 0.5 + 0.5f;
+			p[i].pos.y = -p[i].pos.y * 0.5 + 0.5f;
+
+			p[i].pos.x *= settings->window_width;
+        	p[i].pos.y *= settings->window_high;
 
 
 		}
 
-		Rectangle rect(v[0].x, v[0].y);
-		rect.add_point(v[1].x, v[1].y);
-		rect.add_point(v[2].x, v[2].y);
+		Rectangle rect(p[0].pos.x, p[0].pos.y);
+		rect.add_point(p[1].pos.x, p[1].pos.y);
+		rect.add_point(p[2].pos.x, p[2].pos.y);
        
 		std::cout << "rect: "  << rect  << "\n";
 
@@ -83,17 +87,17 @@ void CPURender::draw_mesh(BaseVisualStorage* data, const Camera *camera, const G
         rect.size_y = std::min(settings->window_high - rect.y, rect.size_y);
 
 
-		std::cout << "volume: "  << edge_function(v[0], v[1], v[2]) / 2   << "\n";
-        float triangle_square = edge_function(v[0], v[1], v[2]);
+		std::cout << "volume: "  << edge_function(p[0].pos, p[1].pos, p[2].pos) / 2   << "\n";
+        float triangle_square = edge_function(p[0].pos, p[1].pos, p[2].pos);
 
         for (int x = rect.x; x < rect.x + rect.size_x; ++x) {
             // std::cout << "|";
             for (int y = rect.y; y < rect.y + rect.size_y; ++y) {
                 glm::vec4 point(x, y, 0, 1);
 
-                float e_1 = edge_function(v[0], v[1], point) / triangle_square;
-                float e_2 = edge_function(v[1], v[2], point) / triangle_square;
-                float e_3 = edge_function(v[2], v[0], point) / triangle_square;
+                float e_1 = edge_function(p[0].pos, p[1].pos, point) / triangle_square;
+                float e_2 = edge_function(p[1].pos, p[2].pos, point) / triangle_square;
+                float e_3 = edge_function(p[2].pos, p[0].pos, point) / triangle_square;
 
                 if (std::signbit(e_1) == std::signbit(e_2) && std::signbit(e_2) == std::signbit(e_3)) {
                         int32_t a8 = 255;
@@ -128,6 +132,16 @@ BaseVisualStorage* CPURender::create_storage() {
 
 
 
+CPURender::CPURender() {
+	shader_algorithms.push_back(new ProjectionShaderImplementation);
+}
 
-
+ShaderImplementation* CPURender::GetShader(BaseShader::ShaderType type) {
+	for (ShaderImplementation* shader : shader_algorithms) {
+		if (shader->type == type) {
+			return shader;
+		}
+	}
+	return NULL;
+}
 

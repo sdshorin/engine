@@ -22,10 +22,15 @@ void VisualServer::flush() {
 // 	render->draw_polygon(points, camera, settings, frame_buffer);
 // }
 
-void VisualServer::draw_mesh(BaseVisualStorage* data) {
-    render->draw_mesh(data, camera, settings, frame_buffer);
-    // shader.
-
+void VisualServer::draw_mesh(BaseVisualStorage* data, BaseShader* shader_in) {
+    ProjectionShader* shader = dynamic_cast<ProjectionShader*>(shader_in);
+    if (!shader) {
+        std::cout << "Can't draw mesh: shader is not ProjectionShader" << std::endl;
+        return;
+    }
+    shader->camera_matrix = camera->get_camera_matrix();
+    shader->projection_matrix = camera->get_projection_matrix();
+    render->draw_mesh(data, shader_in, settings, frame_buffer);
 }
 
 BaseVisualStorage* VisualServer::create_storage() {

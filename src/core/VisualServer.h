@@ -6,7 +6,7 @@
 // #define GL_SILENCE_DEPRECATION
 // #include <GLFW/glfw3.h>
 #include "BaseVisualStorage.hpp"
-#include "BaseShader.hpp"
+#include "Shaders.hpp"
 
 class BaseRender {
 };
@@ -28,7 +28,7 @@ public:
 	void RenderScreen();
 	// void DrawObject();
 	// void draw_polygon(const std::vector<glm::vec4>& points);
-	void draw_mesh(BaseVisualStorage* data);
+	void draw_mesh(BaseVisualStorage* data, BaseShader* shader);
 	// BaseVisualStorage* create_storage(BaseShader::ShaderType type);
 	// BaseVisualStorage* create_storage(MeshResource::MeshType type);
 	BaseVisualStorage* create_storage(); // always use large points
