@@ -39,7 +39,6 @@ float edge_function(glm::vec4& v0, glm::vec4& v1, glm::vec4& v2) {
 
 
 void CPURender::draw_mesh(BaseVisualStorage* data, const BaseShader* shader_params) {
-	std::cout << "VisualServer draw_mesh \n";
 
 	ShaderImplementation* shader_imp = GetShader(shader_params->type); 
 	if (!shader_imp) {
@@ -53,7 +52,6 @@ void CPURender::draw_mesh(BaseVisualStorage* data, const BaseShader* shader_para
 	}
 
 	const std::vector<Point>& points = store->data;
-	std::cout << "VisualServer points size: " << points.size() << "\n";
 	
 	for (int i = 0; i < points.size(); i += 3) {
 		Point p[3] = {points[i], points[i + 1], points[i + 2]};
@@ -79,7 +77,6 @@ void CPURender::draw_mesh(BaseVisualStorage* data, const BaseShader* shader_para
 		rect.add_point(p[1].pos.x, p[1].pos.y);
 		rect.add_point(p[2].pos.x, p[2].pos.y);
        
-		// std::cout << "rect: "  << rect  << "\n";
 
         rect.x = std::max(0.0f, rect.x);
         rect.y = std::max(0.0f, rect.y);
@@ -99,17 +96,20 @@ void CPURender::draw_mesh(BaseVisualStorage* data, const BaseShader* shader_para
                 float e_2 = edge_function(p[1].pos, p[2].pos, point) / triangle_square;
                 float e_3 = edge_function(p[2].pos, p[0].pos, point) / triangle_square;
 
-				// TODO: check z-buffer
                 if (std::signbit(e_1) == std::signbit(e_2) && std::signbit(e_2) == std::signbit(e_3)) {
-						Point pixel = p[0] * e_1 + p[1] * e_2 + p[2] * e_3;
+						Point pixel = p[2] * e_1 + p[0] * e_2 + p[1] * e_3;
+
+						if (pixel.pos.z <= 0.001 || pixel.pos.z > screen.z_buffer[y * screen.window_width + x]) {
+							continue;
+						}
                         int32_t a8 = 255;
                         int32_t r8 = int32_t(pixel.colour.x);
                         int32_t g8 = int32_t(pixel.colour.y);
                         int32_t b8 = int32_t(pixel.colour.z);
                         int32_t col32 = a8 << 24 | b8 << 16 | g8 << 8 | r8;
                         screen.frame_buffer[y * screen.window_width + x] = col32;
+						screen.z_buffer[y * screen.window_width + x] = pixel.pos.z;
 
-                    // std::cout << x << " " << y << "\n";
                 } else {
 					// int32_t r8 = int32_t(((std::signbit(e_1))? 1 : 0) * 255.0f);
 					// int32_t g8 = int32_t(((std::signbit(e_2))? 1 : 0) * 255.0f);
@@ -135,7 +135,7 @@ BaseVisualStorage* CPURender::create_storage() {
 void CPURender::Flush() {
 	for (int i = 0; i < screen.window_width * screen.window_high; ++i) {
 		screen.frame_buffer[i] = 100 << 24 | 100 << 16 | 100 << 8 | 100;
-		screen.z_buffer[i] = 1000000;
+		screen.z_buffer[i] = 1.0;
 	}
 }
 
@@ -150,11 +150,10 @@ void CPURender::InitGraphic(GraphicSettings* settings) {
                                        SDL_WINDOWPOS_CENTERED,
                                        screen.window_width, screen.window_high, SDL_WINDOW_SHOWN);
 	screen.frame_buffer = (int32_t*)malloc(screen.window_width * screen.window_high * sizeof(int32_t));
-	screen.z_buffer = (int32_t*)malloc(screen.window_width * screen.window_high * sizeof(int32_t));
+	screen.z_buffer = (float*)malloc(screen.window_width * screen.window_high * sizeof(float));
 }
 
 void CPURender::RenderScreen() {
-	std::cout << "Render Screen\n";
 	SDL_Surface *pixelSurface = SDL_CreateRGBSurfaceFrom(screen.frame_buffer,
                                                          screen.window_width,
                                                          screen.window_high,

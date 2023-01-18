@@ -3,7 +3,7 @@
 
 struct Screen {
     int32_t* frame_buffer;
-    int32_t* z_buffer;
+    float* z_buffer;
     int window_high;
 	int window_width;
 };
