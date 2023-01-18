@@ -3,16 +3,18 @@
 #include "engine.hpp"
 #include <unistd.h>
 #include <iostream>
-
+#include <chrono>
 
 Engine::Engine() {
 }
 
 void Engine::Run() {
     bool is_running = true;
+    auto loop_start = std::chrono::steady_clock::now();
+    float delta = 0.2;
     while (is_running) {
-        float delta = 0.2;
-        is_running = process_events(delta);
+        loop_start = std::chrono::steady_clock::now();
+        is_running = process_events(delta / 1000);
         if (!is_running) {
             break;
         }
@@ -20,7 +22,14 @@ void Engine::Run() {
         // root->process(0.02);
         root.draw(visual_server);
         visual_server->RenderScreen();
-        usleep(200000);
+        
+        
+        auto loop_end = std::chrono::steady_clock::now();
+        float used_time = delta = std::chrono::duration_cast<std::chrono::milliseconds>(loop_end - loop_start).count();
+        long sleep_time = std::max(static_cast<long>(1000.0 / MAX_FPS - used_time), 0L);
+        delta = used_time + sleep_time;
+        
+        usleep(sleep_time * 1000);
     }
 }
 

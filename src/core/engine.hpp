@@ -9,7 +9,7 @@
 #include <iostream>
 
 
-
+#define MAX_FPS 30.0
 
 class Engine {
 
