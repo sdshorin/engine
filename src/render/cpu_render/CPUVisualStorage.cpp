@@ -10,7 +10,7 @@ void CPUVisualStorage::load_pos(const std::vector<glm::vec4>& positions) {
     }
 }
 
-void CPUVisualStorage::load_colour(const std::vector<glm::ivec3>& colours) {
+void CPUVisualStorage::load_colour(const std::vector<glm::vec3>& colours) {
     if (data.size() < colours.size()) {
         data.resize(colours.size());
     }
