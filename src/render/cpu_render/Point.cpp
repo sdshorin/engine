@@ -1,7 +1,7 @@
 #include "Point.hpp"
 
 
-Point Point::operator* (float x) {
+Point Point::operator* (float x) const {
     Point res(*this);
     res.pos *= x;
     res.colour *= x;
@@ -11,7 +11,7 @@ Point Point::operator* (float x) {
     return res;
 }
 
-Point Point::operator+ (const Point& p) {
+Point Point::operator+ (const Point& p) const {
     Point res(*this);
 
     res.pos += p.pos;
