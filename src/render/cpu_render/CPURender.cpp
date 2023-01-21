@@ -6,6 +6,7 @@
 
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
+#include <array>
 struct Rectangle {
 	float x, y, size_x, size_y;
 
@@ -36,7 +37,61 @@ float edge_function(const glm::vec4& v0, const glm::vec4& v1, const glm::vec4& v
 	return (v1.x - v0.x) * (v2.y - v0.y) - (v1.y - v0.y) * (v2.x - v0.x);
 }
 
+Point ProjectToPanel(const Point& p1, const Point& p2, float panel_z, bool& successfully) {
+	float height_prev = std::abs(p1.pos.z - panel_z);
+	float height_current = std::abs(p2.pos.z - panel_z);
+	if (height_prev + height_current == 0) {
+		successfully = false;
+		return {};
+	}
+	float height_prev_normed = (height_prev / (height_prev + height_current));
+	float height_current_normed = (height_current / (height_prev + height_current));
+	successfully = true;
 
+	return p2 * height_prev_normed + p1 * height_current_normed;
+}
+
+int ClipTriangle(const std::array<Point, 3>& p, std::array<Point, 4>& clipped_p, float dist) {
+	bool isLastClipped = p[0].pos.z < dist;
+	int last_processed_index = 0;
+
+	for (int i = 1; i <= 3; ++i) {
+		if (p[i % 3].pos.z < dist) {
+			if (!isLastClipped) {
+				// went through the panel
+				// add a point projected to the panel
+				bool successfully;
+				clipped_p[last_processed_index] = ProjectToPanel(p[i - 1], p[i  % 3], dist, successfully);
+				last_processed_index++;
+				if (!successfully) {
+					return 0;
+				}
+			} else {
+				// behind the panel - ignore
+			}
+			isLastClipped = true;
+		} else {
+			if (!isLastClipped) {
+				// both points on screen
+				clipped_p[last_processed_index] = p[i  % 3];
+				last_processed_index++;
+			} else {
+				// left the panel. add a projected point;
+				bool successfully;
+				clipped_p[last_processed_index] = ProjectToPanel(p[i - 1], p[i  % 3], dist, successfully);
+				last_processed_index++;
+				if (!successfully) {
+					return 0;
+				}
+				// add current point
+				clipped_p[last_processed_index] = p[i  % 3];
+				last_processed_index++;
+			}
+			isLastClipped = false;
+		}
+	}
+	return last_processed_index;
+}
 
 void CPURender::draw_mesh(BaseVisualStorage* data, const BaseShader* shader_params) {
 
@@ -54,7 +109,7 @@ void CPURender::draw_mesh(BaseVisualStorage* data, const BaseShader* shader_para
 	const std::vector<Point>& points = store->data;
 	
 	for (int i = 0; i < points.size(); i += 3) {
-		Point p[3] = {points[i], points[i + 1], points[i + 2]};
+		std::array<Point, 3> p = {points[i], points[i + 1], points[i + 2]};
 
 		bool clipped = false;
 		for (int i = 0; i < 3; ++i) {
@@ -62,27 +117,34 @@ void CPURender::draw_mesh(BaseVisualStorage* data, const BaseShader* shader_para
 			p[i].pos = p[i].pos / p[i].pos.w;
 
 			p[i] = shader_imp->VertexShader(p[i]);
-			if (p[i].pos.z < 0.1) {
-				clipped = true;
-				// std::cout << "clipped 1: " << glm::to_string(p[i].pos).c_str() << "\n";
-			}
 		}
 		// clipping
+		std::array<Point, 4> clipped_p;
+		// Point clipped_p[4];
+		int filled_points = ClipTriangle(p, clipped_p, 0.1);
+		// std::cout << "filled_points : " << filled_points << "\n";
 
-		for (int i = 0; i < 3; ++i) {
-			p[i].pos = p[i].pos / p[i].pos.w;
+		// clipped_p[0] = p[0];
+		// clipped_p[1] = p[1];
+		// clipped_p[2] = p[2];
+		// filled_points = 3;
 
-			p[i].pos.x = p[i].pos.x * 0.5 + 0.5f;
-			p[i].pos.y = -p[i].pos.y * 0.5 + 0.5f;
+		for (int i = 0; i < filled_points; ++i) {
+			clipped_p[i].pos = clipped_p[i].pos / clipped_p[i].pos.w;
 
-			p[i].pos.x *= screen.window_width;
-        	p[i].pos.y *= screen.window_high;
+			clipped_p[i].pos.x = clipped_p[i].pos.x * 0.5 + 0.5f;
+			clipped_p[i].pos.y = -clipped_p[i].pos.y * 0.5 + 0.5f;
+
+			clipped_p[i].pos.x *= screen.window_width;
+        	clipped_p[i].pos.y *= screen.window_high;
 		}
 
-		if (clipped) {
-			continue;
+		if (filled_points == 3) {
+			RasterizerTriangle(clipped_p[0], clipped_p[1], clipped_p[2]);
+		} else if (filled_points == 4) {
+			RasterizerTriangle(clipped_p[0], clipped_p[1], clipped_p[2]);
+			RasterizerTriangle(clipped_p[0], clipped_p[2], clipped_p[3]);
 		}
-		RasterizerTriangle(p[0], p[1], p[2]);
 	}
 }
 
