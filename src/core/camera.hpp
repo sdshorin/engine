@@ -2,6 +2,8 @@
 
 # include <glm/glm.hpp>
 
+# define CAMERA_SENSITIVITY 0.05f
+
 class Camera {
 public:
     glm::vec3 position;
@@ -10,11 +12,16 @@ public:
     glm::mat4 projection_matrix;
     glm::mat4 camera_matrix;
 
+    float pitch;
+	float yaw;
+
     float speed;
 
     Camera();
     glm::mat4 get_projection_matrix() const;
     glm::mat4 get_camera_matrix() const;
+
+    void rotate(int xrel, int yrel);
 
     void move(glm::vec3 offset);
     void move_right(float delta);

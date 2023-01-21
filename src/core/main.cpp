@@ -11,7 +11,8 @@ int main() {
 	// GraphicSettings *settings = new GraphicSettings;
 	engine.visual_server->InitGraphic();
 
-	MeshResource res("objects/cube.obj");
+	// MeshResource res("objects/cube.obj");
+	MeshResource res("objects/teapot.obj");
 	// MeshResource res("objects/test.obj");
 	Mesh mesh(res);
 	// engine->root->add_child(new Triangle);

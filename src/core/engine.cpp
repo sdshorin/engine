@@ -28,35 +28,37 @@ void Engine::Run() {
         float used_time = delta = std::chrono::duration_cast<std::chrono::milliseconds>(loop_end - loop_start).count();
         long sleep_time = std::max(static_cast<long>(1000.0 / MAX_FPS - used_time), 0L);
         delta = used_time + sleep_time;
+        std::cout << "FPS: " << 1000.0 / delta << "\n";
         
         usleep(sleep_time * 1000);
     }
 }
 
-void Engine::process_keyboard_event(SDL_Keycode sym, float delta) {
-    switch (sym)
-    {
-    case SDLK_w:
+
+void Engine::process_keyboard_events(const Uint8* keyboard_state, float delta) {
+    if (keyboard_state[SDL_SCANCODE_W]) {
         visual_server->camera->move(visual_server->camera->front * delta);
-        break;
-    case SDLK_s:
-        visual_server->camera->move(-visual_server->camera->front * delta);
-        break;
-    case SDLK_a:
-        visual_server->camera->move_left(delta);
-        break;
-    case SDLK_d:
-        visual_server->camera->move_right(delta);
-        break;
-    case SDLK_q:
-        visual_server->camera->move_up(delta);
-        break;
-    case SDLK_e:
-        visual_server->camera->move_down(delta);
-        break;
-    default:
-        break;
     }
+    if (keyboard_state[SDL_SCANCODE_S]) {
+        visual_server->camera->move(-visual_server->camera->front * delta);
+    }
+    if (keyboard_state[SDL_SCANCODE_A]) {
+        visual_server->camera->move_left(delta);
+    }
+    if (keyboard_state[SDL_SCANCODE_D]) {
+        visual_server->camera->move_right(delta);
+    }
+    if (keyboard_state[SDL_SCANCODE_Q]) {
+        visual_server->camera->move_up(delta);
+    }
+    if (keyboard_state[SDL_SCANCODE_E]) {
+        visual_server->camera->move_down(delta);
+    }
+}
+
+void Engine::process_rotation(int xrel, int yrel) {
+    visual_server->camera->rotate(xrel, -yrel);
+
 }
 
 bool Engine::process_events(float delta) {
@@ -69,12 +71,20 @@ bool Engine::process_events(float delta) {
                 std::cout << "Exit \n";
                 return false;
                 break;
-            case SDL_KEYDOWN:
-                process_keyboard_event(event.key.keysym.sym, delta);
+            case SDL_MOUSEMOTION:
+                process_rotation(event.motion.xrel, event.motion.yrel);
                 break;
-            
         }
     }
+
+    const Uint8* state = SDL_GetKeyboardState(nullptr);
+    if (state[SDL_SCANCODE_ESCAPE]) {
+        std::cout << "Exit \n";
+        return false;
+    }
+    process_keyboard_events(state, delta);
+
+
     return true;
 }
 

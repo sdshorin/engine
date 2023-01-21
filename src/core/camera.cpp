@@ -18,6 +18,8 @@ Camera::Camera() {
     up = glm::vec3(0.0, 1.0, 0.0);
     camera_matrix  = glm::lookAt(position, position + front, up);
     speed = 1;
+    pitch = 0.0f;
+	yaw = -90.0f;
 
     projection_matrix = glm::perspective(
             glm::radians(45.0f),    // field of view
@@ -53,3 +55,15 @@ void Camera::move_down(float delta) {
     std::cout << "camera pos: "  << glm::to_string(position).c_str()   << "\n";
 }
 
+
+void Camera::rotate(int xrel, int yrel) {
+    yaw += xrel * CAMERA_SENSITIVITY;
+    pitch += yrel * CAMERA_SENSITIVITY;
+
+    pitch = glm::clamp(pitch, -89.0f, 89.0f);
+    
+    float pi = glm::pi<float>();
+    front.x = cos(yaw / 180.0 * pi) * cos(pitch / 180.0 * pi);
+    front.y = sin(pitch / 180.0 * pi);
+    front.z = sin(yaw / 180.0 * pi) * cos(pitch / 180.0 * pi);
+}

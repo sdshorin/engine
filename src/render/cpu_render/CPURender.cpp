@@ -235,6 +235,7 @@ void CPURender::InitGraphic(GraphicSettings* settings) {
                                        screen.window_width, screen.window_high, SDL_WINDOW_SHOWN);
 	screen.frame_buffer = (int32_t*)malloc(screen.window_width * screen.window_high * sizeof(int32_t));
 	screen.z_buffer = (float*)malloc(screen.window_width * screen.window_high * sizeof(float));
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 }
 
 void CPURender::RenderScreen() {

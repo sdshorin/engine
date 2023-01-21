@@ -14,7 +14,8 @@
 class Engine {
 
 	bool process_events(float delta);
-	void process_keyboard_event(SDL_Keycode sym, float delta);
+	void process_keyboard_events(const Uint8* keyboard_state, float delta);
+	void process_rotation(int xrel, int yrel);
 public:
 	VisualServer *visual_server;
 	TreeObject root;
