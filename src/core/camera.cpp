@@ -7,9 +7,39 @@ glm::mat4 Camera::get_projection_matrix() const {
     return projection_matrix;
 }
 
+
+glm::mat4 create_camera_matrix(glm::vec3 position, glm::vec3 target, glm::vec3 up)
+{
+    up = glm::normalize(up);
+    glm::vec3 z_camera_dir = glm::normalize(position - target);
+    glm::vec3 x_camera_right = glm::normalize(glm::cross(glm::normalize(up), z_camera_dir));
+    glm::vec3 y_camera_up = glm::cross(z_camera_dir, x_camera_right);
+
+
+    glm::mat4 matrix = glm::mat4(1);
+	matrix[0][0] = x_camera_right[0];
+	matrix[1][0] = x_camera_right[1];
+	matrix[2][0] = x_camera_right[2];
+
+    matrix[0][1] = y_camera_up[0];
+	matrix[1][1] = y_camera_up[1];
+	matrix[2][1] = y_camera_up[2];
+
+    matrix[0][2] = z_camera_dir[0];
+	matrix[1][2] = z_camera_dir[1];
+	matrix[2][2] = z_camera_dir[2];
+
+    matrix[3][0] = -glm::dot(x_camera_right, position);
+    matrix[3][1] = -glm::dot(y_camera_up, position);
+    matrix[3][2] = -glm::dot(z_camera_dir, position);
+
+    return matrix;
+}
+
+
 glm::mat4 Camera::get_camera_matrix() const {
-    // return camera_matrix;
-    return glm::lookAt(position, position + front, up);
+    glm::mat4 mat = create_camera_matrix(position, position + front, up);
+    return mat;
 }
 
 glm::mat4 perspective(float fov, float aspect, float near, float far) {
@@ -24,6 +54,7 @@ glm::mat4 perspective(float fov, float aspect, float near, float far) {
 	matrix[0][0] = matrix[1][1] / aspect;
     return matrix;
 }
+
 
 Camera::Camera() {
     position = glm::vec3(0.0, 0.0, 3.0);
@@ -43,10 +74,12 @@ Camera::Camera() {
 
 }
 
+
 void Camera::move(glm::vec3 offset) {
     position += offset * speed;
     // std::cout << "camera pos: "  << glm::to_string(position).c_str()   << "\n";
 }
+
 
 void Camera::move_right(float delta) {
     glm::vec3 right = glm::normalize(glm::cross(front, up));
@@ -54,16 +87,19 @@ void Camera::move_right(float delta) {
     // std::cout << "camera pos: "  << glm::to_string(position).c_str()   << "\n";
 }
 
+
 void Camera::move_left(float delta) {
     glm::vec3 right = glm::normalize(glm::cross(front, up));
     position -= right * delta * speed;
     // std::cout << "camera pos: "  << glm::to_string(position).c_str()   << "\n";
 }
 
+
 void Camera::move_up(float delta) {
     position += up * delta * speed;
     // std::cout << "camera pos: "  << glm::to_string(position).c_str()   << "\n";
 }
+
 
 void Camera::move_down(float delta) {
     position -= up * delta * speed;
