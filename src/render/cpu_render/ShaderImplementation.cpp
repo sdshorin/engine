@@ -33,6 +33,6 @@ Point ProjectionShaderImplementation::VertexShader(const Point& p) {
     return res;
 }
 
-glm::ivec3 ProjectionShaderImplementation::FragmentShader(const Point& p) {
-    return glm::ivec3(255, 0, 0); 
+glm::ivec3 ProjectionShaderImplementation::FragmentShader(const Point& pixel) {
+    return glm::ivec3(pixel.colour.r, pixel.colour.g, pixel.colour.b); 
 }

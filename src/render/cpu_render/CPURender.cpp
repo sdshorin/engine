@@ -140,16 +140,15 @@ void CPURender::draw_mesh(BaseVisualStorage* data, const BaseShader* shader_para
 		}
 
 		if (filled_points == 3) {
-			RasterizerTriangle(clipped_p[0], clipped_p[1], clipped_p[2]);
+			RasterizerTriangle(shader_imp, clipped_p[0], clipped_p[1], clipped_p[2]);
 		} else if (filled_points == 4) {
-			RasterizerTriangle(clipped_p[0], clipped_p[1], clipped_p[2]);
-			RasterizerTriangle(clipped_p[0], clipped_p[2], clipped_p[3]);
+			RasterizerTriangle(shader_imp, clipped_p[0], clipped_p[1], clipped_p[2]);
+			RasterizerTriangle(shader_imp, clipped_p[0], clipped_p[2], clipped_p[3]);
 		}
 	}
 }
 
-void CPURender::RasterizerTriangle(const Point& p_1, const Point& p_2, const Point& p_3) {
-	// TO func rasterizer
+void CPURender::RasterizerTriangle(ShaderImplementation* shader_imp, const Point& p_1, const Point& p_2, const Point& p_3) {
 	Rectangle rect(p_1.pos.x, p_1.pos.y);
 	rect.add_point(p_2.pos.x, p_2.pos.y);
 	rect.add_point(p_3.pos.x, p_3.pos.y);
@@ -168,12 +167,8 @@ void CPURender::RasterizerTriangle(const Point& p_1, const Point& p_2, const Poi
 	}
 	rect.size_y = std::min(std::max(screen.window_high - rect.y, 0.0f), rect.size_y);
 
-	// std::cout << "rect: "  << rect  << "\n";
-	// std::cout << "volume: "  << edge_function(p_1.pos, p_2.pos, p_3.pos) / 2   << "\n";
 	float triangle_square = edge_function(p_1.pos, p_2.pos, p_3.pos);
-	// std::cout << "z: " << p_1.pos.z << "\n";
 	for (int x = rect.x; x < rect.x + rect.size_x; ++x) {
-		// std::cout << "|";
 		for (int y = rect.y; y < rect.y + rect.size_y; ++y) {
 			glm::vec4 point(x, y, 0, 1);
 
@@ -187,25 +182,15 @@ void CPURender::RasterizerTriangle(const Point& p_1, const Point& p_2, const Poi
 					if ( pixel.pos.z > screen.z_buffer[y * screen.window_width + x]) {
 						continue;
 					}
-					// todo: pixel shader
-					int32_t a8 = 255;
-					int32_t r8 = int32_t(pixel.colour.x);
-					int32_t g8 = int32_t(pixel.colour.y);
-					int32_t b8 = int32_t(pixel.colour.z);
-					int32_t col32 = a8 << 24 | b8 << 16 | g8 << 8 | r8;
+					
+					glm::ivec3 colour = shader_imp->FragmentShader(pixel);
+					int32_t col32 = 255 << 24 | colour.b << 16 | colour.g << 8 | colour.r;
+
 					screen.frame_buffer[y * screen.window_width + x] = col32;
 					screen.z_buffer[y * screen.window_width + x] = pixel.pos.z;
 
-			} else {
-				// int32_t r8 = int32_t(((std::signbit(e_1))? 1 : 0) * 255.0f);
-				// int32_t g8 = int32_t(((std::signbit(e_2))? 1 : 0) * 255.0f);
-				// int32_t b8 = int32_t(((std::signbit(e_3))? 1 : 0) * 255.0f);
-
-				// frame_buffer[y * screen.window_width + x] = r8 << 24 | g8 << 16 | b8 << 8 | r8;
-				// std::cout << "0";
 			}
 		}
-		// std::cout << "|\n";
 	}
 }
 

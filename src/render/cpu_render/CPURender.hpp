@@ -15,7 +15,7 @@ class CPURender {
     SDL_Window* window;
     
     ShaderImplementation* GetShader(BaseShader::ShaderType type);
-    void RasterizerTriangle(const Point& p_1, const Point& p_2, const Point& p_3);
+    void RasterizerTriangle(ShaderImplementation* shader_imp, const Point& p_1, const Point& p_2, const Point& p_3);
 
 public:
 
