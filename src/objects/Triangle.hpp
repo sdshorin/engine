@@ -3,5 +3,5 @@
 #include "TreeObject.hpp"
 
 class Triangle: public TreeObject {
-	void draw_self(VisualServer* server) const override;
+	void draw(VisualServer* server) const override;
 };

@@ -19,8 +19,8 @@ void Engine::Run() {
             break;
         }
         visual_server->flush();
-        // root->process(0.02);
-        root.draw(visual_server);
+        root.process_notification(delta / 1000);
+        root.draw_notification(visual_server);
         visual_server->RenderScreen();
         
         

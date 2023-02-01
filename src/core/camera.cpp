@@ -57,7 +57,7 @@ glm::mat4 perspective(float fov, float aspect, float near, float far) {
 
 
 Camera::Camera() {
-    position = glm::vec3(0.0, 0.0, 3.0);
+    position = glm::vec3(1.0, 1.0, 12.0);
     front = glm::vec3(0.0, 0.0, -1.0);
     up = glm::vec3(0.0, 1.0, 0.0);
     camera_matrix  = glm::lookAt(position, position + front, up);
