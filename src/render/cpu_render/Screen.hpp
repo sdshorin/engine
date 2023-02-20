@@ -8,6 +8,7 @@ struct Screen {
 	int window_width;
 
     Screen();
+    Screen& operator=(Screen&& other);
     Screen(int window_high, int window_width);
     ~Screen();
 };

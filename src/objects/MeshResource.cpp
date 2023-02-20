@@ -48,7 +48,7 @@ MeshResource::MeshResource(std::string path) {
         
         if (token == "v ") {
             points.push_back(parse_point(iss));
-            std::cout << "point: " << glm::to_string(points.back()).c_str() << "\n";
+            // std::cout << "point: " << glm::to_string(points.back()).c_str() << "\n";
         } else if (token == "f ") {
             std::vector<glm::vec4> triangulated_polygon = build_triangulated_polygon(points, iss);
             triangles.insert(triangles.end(), triangulated_polygon.begin(), triangulated_polygon.end());
@@ -57,7 +57,7 @@ MeshResource::MeshResource(std::string path) {
     int i = 0;
     std::cout << "triangles.size():  " <<triangles.size() << "\n";
     while (i < triangles.size()) {
-        std::cout << "trinangle: " << glm::to_string(triangles[i]).c_str() << " " << glm::to_string(triangles[i + 1]).c_str() << " " << glm::to_string(triangles[i + 2]).c_str() << "\n";
+        // std::cout << "trinangle: " << glm::to_string(triangles[i]).c_str() << " " << glm::to_string(triangles[i + 1]).c_str() << " " << glm::to_string(triangles[i + 2]).c_str() << "\n";
         i += 3;
     }
     for (int i = 0; i < triangles.size(); ++i) {

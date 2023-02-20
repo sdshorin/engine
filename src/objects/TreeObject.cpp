@@ -1,21 +1,27 @@
 
 #include "TreeObject.hpp"
 #include <stdexcept>
+#include <iostream>
 
 TreeObject::TreeObject() {
     transform = glm::mat4(1.0f);
     parent = NULL;
 }
 
+TreeObject::~TreeObject() {
+    parent = NULL;
+    std::cout << "~TreeObject" << std::endl;
+}
+
 void TreeObject::draw_notification(VisualServer* server) const {
-    for (const TreeObject* child: childrens) {
+    for (const std::shared_ptr<TreeObject> child: childrens) {
         child->draw_notification(server);
     }
     draw(server);
 }
 
 void TreeObject::process_notification(float delta) {
-    for (TreeObject* child: childrens) {
+    for (std::shared_ptr<TreeObject> child: childrens) {
         child->process_notification(delta);
     }
     process(delta);
@@ -45,7 +51,7 @@ void TreeObject::process(float delta) {
     
 }
 
-void TreeObject::add_child(TreeObject* node) {
+void TreeObject::add_child(std::shared_ptr<TreeObject> node) {
     if (node->parent) {
         throw std::invalid_argument("This node already have parent");
     }
