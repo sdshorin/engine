@@ -33,7 +33,9 @@ void VisualServer::draw_mesh(BaseVisualStorage* data, BaseShader* shader_in) {
 }
 
 BaseVisualStorage* VisualServer::create_storage() {
-    return render->create_storage();
+    CPUVisualStorage* storage =  (CPUVisualStorage*)render->create_storage();
+    // render2->storages.push_back(storage);
+    return storage;
 }
 
 void VisualServer::InitGraphic() {
@@ -42,6 +44,5 @@ void VisualServer::InitGraphic() {
 
 void VisualServer::RenderScreen() {
     render->RenderScreen();
-	
 }
 

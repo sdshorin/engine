@@ -122,12 +122,6 @@ void CPURender::draw_mesh(BaseVisualStorage* data, const BaseShader* shader_para
 		std::array<Point, 4> clipped_p;
 		// Point clipped_p[4];
 		int filled_points = ClipTriangle(p, clipped_p, 0.1);
-		// std::cout << "filled_points : " << filled_points << "\n";
-
-		// clipped_p[0] = p[0];
-		// clipped_p[1] = p[1];
-		// clipped_p[2] = p[2];
-		// filled_points = 3;
 
 		for (int i = 0; i < filled_points; ++i) {
 			clipped_p[i].pos = clipped_p[i].pos / clipped_p[i].pos.w;
@@ -212,14 +206,12 @@ void CPURender::InitGraphic(GraphicSettings* settings) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         printf("error initializing SDL: %s\n", SDL_GetError());
     }
-	screen.window_width = settings->window_width;
-	screen.window_high = settings->window_high;
+	screen = Screen(settings->window_high, settings->window_width);
     window = SDL_CreateWindow(settings->window_name.c_str(),
                                        SDL_WINDOWPOS_CENTERED,
                                        SDL_WINDOWPOS_CENTERED,
                                        screen.window_width, screen.window_high, SDL_WINDOW_SHOWN);
-	screen.frame_buffer = (int32_t*)malloc(screen.window_width * screen.window_high * sizeof(int32_t));
-	screen.z_buffer = (float*)malloc(screen.window_width * screen.window_high * sizeof(float));
+	
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 }
 

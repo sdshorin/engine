@@ -6,4 +6,8 @@ struct Screen {
     float* z_buffer;
     int window_high;
 	int window_width;
+
+    Screen();
+    Screen(int window_high, int window_width);
+    ~Screen();
 };

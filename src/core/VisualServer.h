@@ -15,7 +15,7 @@ class BaseRender {
 class VisualServer {
 
 	GraphicSettings* settings;
-	CPURender* render;	
+	CPURender* render;
 public:
 	Camera *camera;
 	VisualServer();
