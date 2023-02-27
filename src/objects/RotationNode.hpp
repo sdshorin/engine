@@ -3,11 +3,13 @@
 
 namespace eng {
 
-class RotationNode: public TreeObject {
+class RotationNode : public TreeObject {
     glm::vec3 axis;
     float step;
-public:
-    RotationNode(glm::vec3 axis, float step = 0.1): axis(axis), step(step) {}
+
+   public:
+    RotationNode(glm::vec3 axis, float step = 0.1) : axis(axis), step(step) {
+    }
     virtual void process(float delta);
 };
-} // namespace eng
+}   // namespace eng

@@ -9,6 +9,6 @@ void RotationNode::process(float delta) {
     glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), rotated_radians, axis);
 
     transform = rotationMatrix * transform;
-}   
+}
 
-} // namespace eng
+}   // namespace eng

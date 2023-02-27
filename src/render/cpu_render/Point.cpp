@@ -2,17 +2,17 @@
 
 namespace cpu_render {
 
-Point Point::operator* (float x) const {
+Point Point::operator*(float x) const {
     Point res(*this);
     res.pos *= x;
     res.colour *= x;
     res.norm *= x;
     res.uv *= x;
-    
+
     return res;
 }
 
-Point Point::operator+ (const Point& p) const {
+Point Point::operator+(const Point& p) const {
     Point res(*this);
 
     res.pos += p.pos;
@@ -23,5 +23,4 @@ Point Point::operator+ (const Point& p) const {
     return res;
 }
 
-
-} // namespace cpu_render
+}   // namespace cpu_render

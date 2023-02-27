@@ -1,20 +1,19 @@
-#include "engine.hpp"
 #include <iostream>
 
+#include "engine.hpp"
 
 // #include <OpenGL/gl3.h>
 
 namespace eng {
 VisualServer::VisualServer() {
-	camera = new Camera;
-	settings = new GraphicSettings;
-	render = new cpu_render::CPURender();
-	std::cout << "CPURender created \n";
+    camera = new Camera;
+    settings = new GraphicSettings;
+    render = new cpu_render::CPURender();
+    std::cout << "CPURender created \n";
 }
 
 void VisualServer::flush() {
     render->Flush();
-	
 }
 
 // void VisualServer::draw_polygon(const std::vector<glm::vec4>& points) {
@@ -46,4 +45,4 @@ void VisualServer::RenderScreen() {
     render->RenderScreen();
 }
 
-} // namespace eng
+}   // namespace eng

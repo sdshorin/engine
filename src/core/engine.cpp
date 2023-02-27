@@ -1,9 +1,11 @@
 
 
 #include "engine.hpp"
+
 #include <unistd.h>
-#include <iostream>
+
 #include <chrono>
+#include <iostream>
 
 namespace eng {
 
@@ -24,18 +26,16 @@ void Engine::Run() {
         root.process_notification(delta / 1000);
         root.draw_notification(visual_server);
         visual_server->RenderScreen();
-        
-        
+
         auto loop_end = std::chrono::steady_clock::now();
         float used_time = delta = std::chrono::duration_cast<std::chrono::milliseconds>(loop_end - loop_start).count();
         long sleep_time = std::max(static_cast<long>(1000.0 / MAX_FPS - used_time), 0L);
         delta = used_time + sleep_time;
         std::cout << "FPS: " << 1000.0 / delta << "\n";
-        
+
         usleep(sleep_time * 1000);
     }
 }
-
 
 void Engine::process_keyboard_events(const Uint8* keyboard_state, float delta) {
     if (keyboard_state[SDL_SCANCODE_W]) {
@@ -60,15 +60,12 @@ void Engine::process_keyboard_events(const Uint8* keyboard_state, float delta) {
 
 void Engine::process_rotation(int xrel, int yrel) {
     visual_server->camera->rotate(xrel, -yrel);
-
 }
 
 bool Engine::process_events(float delta) {
     SDL_Event event;
-    while (SDL_PollEvent(&event) != 0)
-    {
-        switch (event.type)
-        {
+    while (SDL_PollEvent(&event) != 0) {
+        switch (event.type) {
             case SDL_QUIT:
                 std::cout << "Exit \n";
                 return false;
@@ -86,8 +83,7 @@ bool Engine::process_events(float delta) {
     }
     process_keyboard_events(state, delta);
 
-
     return true;
 }
 
-} // namespace eng
+}   // namespace eng

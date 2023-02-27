@@ -1,21 +1,22 @@
-# include <glm/glm.hpp>
 #include "Mesh.hpp"
-#include <iostream>
-#include "VisualServer.h"
-#include <sstream>
+
+#include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <iostream>
+#include <sstream>
+
+#include "VisualServer.h"
 // #include <sstream>
-#include <string>
 #include <fstream>
+#include <string>
 
 namespace eng {
 
-MeshObject::MeshObject(MeshResource& resource_in): resource(resource_in) {
-    ProjectionShader *p_shader = new ProjectionShader;
+MeshObject::MeshObject(MeshResource& resource_in) : resource(resource_in) {
+    ProjectionShader* p_shader = new ProjectionShader;
     p_shader->model = glm::mat4(1.0f);
     shader = p_shader;
 }
-
 
 void MeshObject::draw(VisualServer* server) const {
     ProjectionShader* projection_shader = dynamic_cast<ProjectionShader*>(shader);
@@ -25,4 +26,4 @@ void MeshObject::draw(VisualServer* server) const {
     server->draw_mesh(resource.GetStorage(), shader);
 }
 
-} // namespace eng
+}   // namespace eng

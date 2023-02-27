@@ -1,4 +1,5 @@
 #include "Triangle.hpp"
+
 #include <iostream>
 
 namespace eng {
@@ -11,7 +12,6 @@ void Triangle::draw(VisualServer* server) const {
     triangle.emplace_back(1.0, 0.0, 0.0, 1.0);
     triangle.emplace_back(0.0, 1.0, 0.0, 1.0);
     // server->draw_polygon(triangle);
-    
 }
 
-} // namespace eng
+}   // namespace eng

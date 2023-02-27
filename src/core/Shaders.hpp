@@ -1,30 +1,31 @@
 #pragma once
 
-# include <glm/glm.hpp>
-
+#include <glm/glm.hpp>
 
 namespace eng {
 
 struct BaseShader {
-    enum ShaderType {ShaderPosition, ShaderColor, ShaderLight, ShaderMaterial};
+    enum ShaderType { ShaderPosition, ShaderColor, ShaderLight, ShaderMaterial };
     ShaderType type;
-    BaseShader(ShaderType type_in): type(type_in) {}
-    virtual ~BaseShader() {}
+    BaseShader(ShaderType type_in) : type(type_in) {
+    }
+    virtual ~BaseShader() {
+    }
 };
 
-
-struct ProjectionShader: public BaseShader {
+struct ProjectionShader : public BaseShader {
     glm::mat4 projection_matrix;
     glm::mat4 camera_matrix;
     glm::mat4 model;
 
-    ProjectionShader(): BaseShader(BaseShader::ShaderPosition) {}
+    ProjectionShader() : BaseShader(BaseShader::ShaderPosition) {
+    }
 };
 
-struct ShaderColor: public ProjectionShader {
+struct ShaderColor : public ProjectionShader {
     ShaderColor() {
         type = BaseShader::ShaderColor;
     }
 };
 
-} // namespace eng
+}   // namespace eng

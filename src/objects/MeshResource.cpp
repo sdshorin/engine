@@ -1,12 +1,15 @@
-# include <glm/glm.hpp>
 #include "MeshResource.hpp"
-#include <iostream>
-#include "VisualServer.h"
-#include <sstream>
+
+#include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <iostream>
+#include <sstream>
+
+#include "VisualServer.h"
 // #include <sstream>
-#include <string>
 #include <fstream>
+#include <string>
+
 #include "engine.hpp"
 
 namespace eng {
@@ -28,7 +31,7 @@ std::vector<glm::vec4> build_triangulated_polygon(const std::vector<glm::vec4>& 
             triangles.push_back(points[indexes[0]]);
             triangles.push_back(points[indexes[1]]);
             triangles.push_back(points[indexes[2]]);
-            indexes.erase(std::next(indexes.begin())); // parse the polygon as a set of triangles
+            indexes.erase(std::next(indexes.begin()));   // parse the polygon as a set of triangles
         }
     }
     return triangles;
@@ -40,14 +43,13 @@ MeshResource::MeshResource(std::string path) {
     std::vector<glm::vec3> colours;
     std::vector<glm::vec4> triangles = {};
 
-    for( std::string line; getline( input, line ); )
-    {
+    for (std::string line; getline(input, line);) {
         if (line.size() < 2) {
             continue;
         }
         std::istringstream iss(line.substr(2));
         std::string token = line.substr(0, 2);
-        
+
         if (token == "v ") {
             points.push_back(parse_point(iss));
             // std::cout << "point: " << glm::to_string(points.back()).c_str() << "\n";
@@ -57,9 +59,10 @@ MeshResource::MeshResource(std::string path) {
         }
     }
     int i = 0;
-    std::cout << "triangles.size():  " <<triangles.size() << "\n";
+    std::cout << "triangles.size():  " << triangles.size() << "\n";
     while (i < triangles.size()) {
-        // std::cout << "trinangle: " << glm::to_string(triangles[i]).c_str() << " " << glm::to_string(triangles[i + 1]).c_str() << " " << glm::to_string(triangles[i + 2]).c_str() << "\n";
+        // std::cout << "trinangle: " << glm::to_string(triangles[i]).c_str() << " " << glm::to_string(triangles[i +
+        // 1]).c_str() << " " << glm::to_string(triangles[i + 2]).c_str() << "\n";
         i += 3;
     }
     for (int i = 0; i < triangles.size(); ++i) {
@@ -79,4 +82,4 @@ BaseVisualStorage* MeshResource::GetStorage() const {
     return storage;
 }
 
-} // namespace eng
+}   // namespace eng

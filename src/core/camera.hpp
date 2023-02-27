@@ -1,13 +1,13 @@
 #pragma once
 
-# include <glm/glm.hpp>
+#include <glm/glm.hpp>
 
-# define CAMERA_SENSITIVITY 0.05f
+#define CAMERA_SENSITIVITY 0.05f
 
 namespace eng {
 
 class Camera {
-public:
+   public:
     glm::vec3 position;
     glm::vec3 front;
     glm::vec3 up;
@@ -15,7 +15,7 @@ public:
     glm::mat4 camera_matrix;
 
     float pitch;
-	float yaw;
+    float yaw;
 
     float speed;
 
@@ -33,4 +33,4 @@ public:
     void move_up(float delta);
 };
 
-} // namespace eng
+}   // namespace eng

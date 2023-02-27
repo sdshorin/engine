@@ -7,10 +7,10 @@ namespace eng {
 
 class MeshResource {
     BaseVisualStorage* storage;
-public:
+
+   public:
     MeshResource(std::string path);
     BaseVisualStorage* GetStorage() const;
-
 };
 
-} // namespace eng
+}   // namespace eng

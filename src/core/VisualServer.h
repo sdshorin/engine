@@ -1,7 +1,7 @@
 #pragma once
 
-#include "camera.hpp"
 #include "CPURender.hpp"
+#include "camera.hpp"
 
 // #define GL_SILENCE_DEPRECATION
 // #include <GLFW/glfw3.h>
@@ -10,28 +10,21 @@
 
 namespace eng {
 
-class BaseRender {
-};
-
+class BaseRender {};
 
 class VisualServer {
+    GraphicSettings* settings;
+    cpu_render::CPURender* render;
 
-	GraphicSettings* settings;
-	cpu_render::CPURender* render;
-public:
-	Camera *camera;
-	VisualServer();
-	
-	void InitGraphic();
-	void flush();
-	void RenderScreen();
-	void draw_mesh(BaseVisualStorage* data, BaseShader* shader);
-	BaseVisualStorage* create_storage();
+   public:
+    Camera* camera;
+    VisualServer();
+
+    void InitGraphic();
+    void flush();
+    void RenderScreen();
+    void draw_mesh(BaseVisualStorage* data, BaseShader* shader);
+    BaseVisualStorage* create_storage();
 };
 
-} // namespace eng
-
-
-
-
-
+}   // namespace eng

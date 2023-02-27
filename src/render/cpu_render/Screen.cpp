@@ -1,4 +1,5 @@
 #include "Screen.hpp"
+
 #include <iostream>
 
 namespace cpu_render {
@@ -7,17 +8,15 @@ Screen::Screen() {
     window_width = 100;
     window_high = 100;
     frame_buffer = new int32_t[window_width * window_high];
-	z_buffer = new float[window_width * window_high];
-    std::cout << "Create screen (default)" <<  window_width << " " << window_high << std::endl;
+    z_buffer = new float[window_width * window_high];
+    std::cout << "Create screen (default)" << window_width << " " << window_high << std::endl;
 }
 
-
-Screen::Screen(int window_high, int window_width): window_high(window_high), window_width(window_width)  {
+Screen::Screen(int window_high, int window_width) : window_high(window_high), window_width(window_width) {
     frame_buffer = new int32_t[window_width * window_high];
-	z_buffer = new float[window_width * window_high];
-    std::cout << "Create screen" <<  window_width << " " << window_high << std::endl;
+    z_buffer = new float[window_width * window_high];
+    std::cout << "Create screen" << window_width << " " << window_high << std::endl;
 }
-
 
 Screen::~Screen() {
     if (frame_buffer) {
@@ -31,7 +30,7 @@ Screen::~Screen() {
 
 Screen& Screen::operator=(Screen&& other) {
     std::cout << "Move screen " << std::endl;
-     if (frame_buffer) {
+    if (frame_buffer) {
         delete[] frame_buffer;
     }
     if (z_buffer) {
@@ -48,4 +47,4 @@ Screen& Screen::operator=(Screen&& other) {
     return *this;
 }
 
-} // namespace cpu_render
+}   // namespace cpu_render

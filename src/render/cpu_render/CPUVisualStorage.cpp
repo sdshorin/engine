@@ -39,8 +39,6 @@ void CPUVisualStorage::load_norm(const std::vector<glm::vec3>& norms) {
     }
 }
 
-
 void CPUVisualStorage::commit() {
-
 }
-} // namespace cpu_render
+}   // namespace cpu_render

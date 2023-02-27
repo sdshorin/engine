@@ -1,7 +1,8 @@
 
 #include "TreeObject.hpp"
-#include <stdexcept>
+
 #include <iostream>
+#include <stdexcept>
 
 namespace eng {
 
@@ -16,21 +17,20 @@ TreeObject::~TreeObject() {
 }
 
 void TreeObject::draw_notification(VisualServer* server) const {
-    for (const std::shared_ptr<TreeObject> child: childrens) {
+    for (const std::shared_ptr<TreeObject> child : childrens) {
         child->draw_notification(server);
     }
     draw(server);
 }
 
 void TreeObject::process_notification(float delta) {
-    for (std::shared_ptr<TreeObject> child: childrens) {
+    for (std::shared_ptr<TreeObject> child : childrens) {
         child->process_notification(delta);
     }
     process(delta);
 }
 
 void TreeObject::draw(VisualServer* server) const {
-
 }
 
 void TreeObject::move(const glm::vec3& direction) {
@@ -48,9 +48,7 @@ glm::mat4 TreeObject::get_world_transform() const {
     return transform;
 }
 
-
 void TreeObject::process(float delta) {
-    
 }
 
 void TreeObject::add_child(std::shared_ptr<TreeObject> node) {
@@ -61,6 +59,4 @@ void TreeObject::add_child(std::shared_ptr<TreeObject> node) {
     node->parent = this;
 }
 
-} // namespace eng
-
-
+}   // namespace eng
