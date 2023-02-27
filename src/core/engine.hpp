@@ -11,6 +11,8 @@
 
 #define MAX_FPS 30.0
 
+namespace eng {
+
 class Engine {
 
 	bool process_events(float delta);
@@ -33,3 +35,5 @@ public:
 	void InputEvent();
 	void SubscribeToInputEvents();
 };
+
+} // namespace eng

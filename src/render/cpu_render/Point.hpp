@@ -3,6 +3,8 @@
 # include <glm/glm.hpp>
 # include <vector>
 
+namespace cpu_render {
+
 struct  Point {
     glm::vec4 pos;
     glm::vec3 colour;
@@ -14,3 +16,5 @@ struct  Point {
     Point operator+ (const Point& p) const;
     
 };
+
+} // namespace cpu_render

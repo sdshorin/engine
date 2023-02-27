@@ -4,11 +4,11 @@
 
 // #include <OpenGL/gl3.h>
 
-
+namespace eng {
 VisualServer::VisualServer() {
 	camera = new Camera;
 	settings = new GraphicSettings;
-	render = new CPURender();
+	render = new cpu_render::CPURender();
 	std::cout << "CPURender created \n";
 }
 
@@ -33,7 +33,7 @@ void VisualServer::draw_mesh(BaseVisualStorage* data, BaseShader* shader_in) {
 }
 
 BaseVisualStorage* VisualServer::create_storage() {
-    CPUVisualStorage* storage =  (CPUVisualStorage*)render->create_storage();
+    BaseVisualStorage* storage = render->create_storage();
     // render2->storages.push_back(storage);
     return storage;
 }
@@ -46,3 +46,4 @@ void VisualServer::RenderScreen() {
     render->RenderScreen();
 }
 
+} // namespace eng

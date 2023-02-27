@@ -9,6 +9,8 @@
 #include <fstream>
 #include "engine.hpp"
 
+namespace eng {
+
 glm::vec4 parse_point(std::istringstream& iss) {
     float x, y, z;
     iss >> x >> y >> z;
@@ -77,3 +79,4 @@ BaseVisualStorage* MeshResource::GetStorage() const {
     return storage;
 }
 
+} // namespace eng

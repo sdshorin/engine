@@ -1,6 +1,8 @@
 
 #include "CPUVisualStorage.hpp"
 
+namespace cpu_render {
+
 void CPUVisualStorage::load_pos(const std::vector<glm::vec4>& positions) {
     if (data.size() < positions.size()) {
         data.resize(positions.size());
@@ -41,4 +43,4 @@ void CPUVisualStorage::load_norm(const std::vector<glm::vec3>& norms) {
 void CPUVisualStorage::commit() {
 
 }
-
+} // namespace cpu_render

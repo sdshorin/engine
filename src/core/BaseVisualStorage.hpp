@@ -2,6 +2,8 @@
 # include <glm/glm.hpp>
 # include <vector>
 
+namespace eng {
+
 class BaseVisualStorage {
 public:
     virtual void load_pos(const std::vector<glm::vec4>& data) = 0;
@@ -10,3 +12,5 @@ public:
     virtual void load_norm(const std::vector<glm::vec3>& data) = 0;
     virtual void commit() = 0;
 };
+
+} // namespace eng

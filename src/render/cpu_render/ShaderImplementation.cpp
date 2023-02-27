@@ -1,24 +1,11 @@
 #include "ShaderImplementation.hpp"
 
 #include <stdexcept>
-// class ProjectionShaderImplementation: public ShaderImplementation {
-//     ProjectionShaderImplementation() {type = BaseShader::ShaderType::ShaderPosition; }
-    
-//     ProjectionShaderImplementation::VertexShader(const Point& p);
-//     virtual Point FragmentShader(const Point& p);
 
-// };
+namespace cpu_render {
 
-// class ColourShaderImplementation: public ShaderImplementation {
-//     ColourShaderImplementation() {type = BaseShader::ShaderType::ShaderColor; }
-
-//     virtual Point VertexShader(const Point& p);
-//     virtual Point FragmentShader(const Point& p);
-// };
-
-
-void ProjectionShaderImplementation::LoadParams(const BaseShader* params_in) {
-    const ProjectionShader* params = dynamic_cast<const ProjectionShader*>(params_in);
+void ProjectionShaderImplementation::LoadParams(const eng::BaseShader* params_in) {
+    const eng::ProjectionShader* params = dynamic_cast<const eng::ProjectionShader*>(params_in);
     if (!params) {
         throw std::invalid_argument("Can't convert shader_params to ProjectionShader*");
     }
@@ -36,3 +23,5 @@ Point ProjectionShaderImplementation::VertexShader(const Point& p) {
 glm::ivec3 ProjectionShaderImplementation::FragmentShader(const Point& pixel) {
     return glm::ivec3(pixel.colour.r, pixel.colour.g, pixel.colour.b); 
 }
+
+} // namespace cpu_render

@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include <iostream>
 
+namespace eng {
+
 TreeObject::TreeObject() {
     transform = glm::mat4(1.0f);
     parent = NULL;
@@ -59,6 +61,6 @@ void TreeObject::add_child(std::shared_ptr<TreeObject> node) {
     node->parent = this;
 }
 
-
+} // namespace eng
 
 

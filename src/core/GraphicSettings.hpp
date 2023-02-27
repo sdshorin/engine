@@ -1,6 +1,8 @@
 #pragma once
 # include <string>
 
+namespace eng {
+
 struct GraphicSettings {
 	int window_high = 600;
 	// int window_high = 400;
@@ -9,4 +11,4 @@ struct GraphicSettings {
 	std::string window_name = "Engine";
 };
 
-
+} // namespace eng

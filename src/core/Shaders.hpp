@@ -3,6 +3,8 @@
 # include <glm/glm.hpp>
 
 
+namespace eng {
+
 struct BaseShader {
     enum ShaderType {ShaderPosition, ShaderColor, ShaderLight, ShaderMaterial};
     ShaderType type;
@@ -25,4 +27,4 @@ struct ShaderColor: public ProjectionShader {
     }
 };
 
-
+} // namespace eng

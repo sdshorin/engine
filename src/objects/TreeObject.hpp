@@ -4,6 +4,8 @@
 
 #include "VisualServer.h"
 
+namespace eng {
+
 class TreeObject {
 	std::vector<std::shared_ptr<TreeObject>> childrens;
 	TreeObject* parent;
@@ -24,7 +26,7 @@ public:
 
 
 
-
+} // namespace eng
 
 
 

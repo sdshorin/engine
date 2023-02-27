@@ -3,6 +3,8 @@
 #include <iostream>
 #include <glm/gtx/string_cast.hpp>
 
+namespace eng {
+
 glm::mat4 Camera::get_projection_matrix() const {
     return projection_matrix;
 }
@@ -118,3 +120,5 @@ void Camera::rotate(int xrel, int yrel) {
     front.y = sin(pitch / 180.0 * pi);
     front.z = sin(yaw / 180.0 * pi) * cos(pitch / 180.0 * pi);
 }
+
+} // namespace eng

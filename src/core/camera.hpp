@@ -4,6 +4,8 @@
 
 # define CAMERA_SENSITIVITY 0.05f
 
+namespace eng {
+
 class Camera {
 public:
     glm::vec3 position;
@@ -31,3 +33,4 @@ public:
     void move_up(float delta);
 };
 
+} // namespace eng

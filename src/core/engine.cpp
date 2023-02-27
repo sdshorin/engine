@@ -5,6 +5,8 @@
 #include <iostream>
 #include <chrono>
 
+namespace eng {
+
 Engine::Engine() {
 }
 
@@ -88,4 +90,4 @@ bool Engine::process_events(float delta) {
     return true;
 }
 
-
+} // namespace eng

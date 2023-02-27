@@ -8,6 +8,8 @@
 #include <string>
 #include <fstream>
 
+namespace eng {
+
 MeshObject::MeshObject(MeshResource& resource_in): resource(resource_in) {
     ProjectionShader *p_shader = new ProjectionShader;
     p_shader->model = glm::mat4(1.0f);
@@ -23,3 +25,4 @@ void MeshObject::draw(VisualServer* server) const {
     server->draw_mesh(resource.GetStorage(), shader);
 }
 
+} // namespace eng

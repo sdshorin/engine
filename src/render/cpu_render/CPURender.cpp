@@ -7,6 +7,9 @@
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
 #include <array>
+
+namespace cpu_render {
+
 struct Rectangle {
 	float x, y, size_x, size_y;
 
@@ -93,7 +96,7 @@ int ClipTriangle(const std::array<Point, 3>& p, std::array<Point, 4>& clipped_p,
 	return last_processed_index;
 }
 
-void CPURender::draw_mesh(BaseVisualStorage* data, const BaseShader* shader_params) {
+void CPURender::draw_mesh(eng::BaseVisualStorage* data, const eng::BaseShader* shader_params) {
 
 	ShaderImplementation* shader_imp = GetShader(shader_params->type); 
 	if (!shader_imp) {
@@ -189,7 +192,7 @@ void CPURender::RasterizerTriangle(ShaderImplementation* shader_imp, const Point
 }
 
 
-BaseVisualStorage* CPURender::create_storage() {
+eng::BaseVisualStorage* CPURender::create_storage() {
 	CPUVisualStorage* store = new CPUVisualStorage;
 	storages.push_back(store);
 	return store;
@@ -202,7 +205,7 @@ void CPURender::Flush() {
 	}
 }
 
-void CPURender::InitGraphic(GraphicSettings* settings) {
+void CPURender::InitGraphic(eng::GraphicSettings* settings) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         printf("error initializing SDL: %s\n", SDL_GetError());
     }
@@ -244,7 +247,7 @@ CPURender::~CPURender() {
 }
 
 
-ShaderImplementation* CPURender::GetShader(BaseShader::ShaderType type) {
+ShaderImplementation* CPURender::GetShader(eng::BaseShader::ShaderType type) {
 	for (ShaderImplementation* shader : shader_algorithms) {
 		if (shader->type == type) {
 			return shader;
@@ -253,3 +256,4 @@ ShaderImplementation* CPURender::GetShader(BaseShader::ShaderType type) {
 	return NULL;
 }
 
+} // namespace cpu_render

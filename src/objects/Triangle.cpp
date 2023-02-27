@@ -1,6 +1,8 @@
 #include "Triangle.hpp"
 #include <iostream>
 
+namespace eng {
+
 void Triangle::draw(VisualServer* server) const {
     std::cout << "Draw Triangle\n";
     std::vector<glm::vec4> triangle;
@@ -11,3 +13,5 @@ void Triangle::draw(VisualServer* server) const {
     // server->draw_polygon(triangle);
     
 }
+
+} // namespace eng

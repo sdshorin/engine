@@ -1,5 +1,6 @@
 #include "Point.hpp"
 
+namespace cpu_render {
 
 Point Point::operator* (float x) const {
     Point res(*this);
@@ -21,3 +22,6 @@ Point Point::operator+ (const Point& p) const {
 
     return res;
 }
+
+
+} // namespace cpu_render

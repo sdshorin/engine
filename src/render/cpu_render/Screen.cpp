@@ -1,5 +1,8 @@
 #include "Screen.hpp"
 #include <iostream>
+
+namespace cpu_render {
+
 Screen::Screen() {
     window_width = 100;
     window_high = 100;
@@ -45,4 +48,4 @@ Screen& Screen::operator=(Screen&& other) {
     return *this;
 }
 
-
+} // namespace cpu_render

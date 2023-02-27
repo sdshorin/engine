@@ -3,6 +3,8 @@
 #include "TreeObject.hpp"
 #include "VisualServer.h"
 
+namespace eng {
+
 class MeshResource {
     BaseVisualStorage* storage;
 public:
@@ -11,4 +13,4 @@ public:
 
 };
 
-
+} // namespace eng

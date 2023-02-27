@@ -4,7 +4,9 @@
 #include "BaseVisualStorage.hpp"
 #include "Point.hpp"
 
-class CPUVisualStorage: public BaseVisualStorage {
+namespace cpu_render {
+
+class CPUVisualStorage: public eng::BaseVisualStorage {
 public:
     std::vector<Point> data;
     virtual void load_pos(const std::vector<glm::vec4>& data);
@@ -14,3 +16,4 @@ public:
     virtual void commit();
 };
 
+} // namespace cpu_render
