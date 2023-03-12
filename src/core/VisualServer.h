@@ -1,5 +1,9 @@
 #pragma once
 
+#if __linux__
+#include <memory>
+#endif
+
 #include "CPURender.hpp"
 #include "camera.hpp"
 
