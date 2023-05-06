@@ -15,14 +15,6 @@ AddOption(
     action='store_true', 
     help='add debug symbols, don\'t use -03',
 )
-AddOption(
-    '--use_asan',
-    dest='use_asan', 
-    default=False,
-    action='store_true', 
-    help='add address sanitizer',
-)
-
 
 
 
@@ -72,10 +64,6 @@ if GetOption("debug"):
 else:
     cppflags += " -O2"
 
-if GetOption("use_asan"):
-    ldflags += " -fsanitize=address"
-    cppflags += " -fsanitize=address"
-
 if sys.platform == "darwin":
     # Support only MacOS with arm processor
     # MacOS uses a different library path
@@ -85,7 +73,7 @@ if sys.platform == "darwin":
         LIBPATH=['/opt/homebrew/lib'],
         )
     env.Replace(LINK='clang++')
-    ldflags.append('-stdlib=libc++')
+    ldflags += '-stdlib=libc++'
 elif sys.platform.startswith("linux"):
     libs = linux_get_installed_libs()
     lib_pathes = []
