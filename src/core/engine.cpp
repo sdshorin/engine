@@ -15,20 +15,23 @@ Engine::Engine() {
 void Engine::Run() {
     bool is_running = true;
     auto loop_start = std::chrono::steady_clock::now();
-    float delta = 0.2;
+    float delta = 0.2; // delta_time
     while (is_running) {
         loop_start = std::chrono::steady_clock::now();
         is_running = process_events(delta / 1000);
         if (!is_running) {
             break;
         }
-        visual_server->flush();
+            // update_scene
         root.process_notification(delta / 1000);
-        root.draw_notification(visual_server);
-        visual_server->RenderScreen();
+        // root.draw_notification(visual_server);
+        // visual_server->RenderScreen();
+        visual_server->RenderScene(root);
+        // visual_server->flush();  
+
 
         auto loop_end = std::chrono::steady_clock::now();
-        float used_time = delta = std::chrono::duration_cast<std::chrono::milliseconds>(loop_end - loop_start).count();
+        float used_time = std::chrono::duration_cast<std::chrono::milliseconds>(loop_end - loop_start).count();
         long sleep_time = std::max(static_cast<long>(1000.0 / MAX_FPS - used_time), 0L);
         delta = used_time + sleep_time;
         std::cout << "FPS: " << 1000.0 / delta << "\n";
@@ -73,6 +76,8 @@ bool Engine::process_events(float delta) {
             case SDL_MOUSEMOTION:
                 process_rotation(event.motion.xrel, event.motion.yrel);
                 break;
+            default:
+                ;    
         }
     }
 
@@ -81,6 +86,7 @@ bool Engine::process_events(float delta) {
         std::cout << "Exit \n";
         return false;
     }
+    // TODO: Тут можно пропустить ввод пользователя (если кнопка была нажата в SDL_PollEvent)
     process_keyboard_events(state, delta);
 
     return true;

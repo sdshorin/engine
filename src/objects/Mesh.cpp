@@ -23,7 +23,11 @@ void MeshObject::draw(VisualServer* server) const {
     if (projection_shader) {
         projection_shader->model = get_world_transform();
     }
-    server->draw_mesh(resource.GetStorage(), shader);
+    if () { 
+        server->draw_mesh(resource.GetStorage(), shader);
+    } else {
+        server->draw_mesh(resource.GetStorage(), shader_2);
+    }
 }
 
 }   // namespace eng

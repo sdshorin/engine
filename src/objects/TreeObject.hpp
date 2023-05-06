@@ -10,6 +10,8 @@ class TreeObject {
     std::vector<std::shared_ptr<TreeObject>> childrens;
     TreeObject* parent;
 
+    // eng::Engine* engine;
+
    protected:
     glm::mat4 transform;
 

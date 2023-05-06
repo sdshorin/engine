@@ -13,6 +13,9 @@ int main() {
     std::srand(std::time(nullptr));
 
     eng::Engine& engine = eng::Engine::getInstance();
+
+    x = Settings("setting.txt")
+
     engine.visual_server = new eng::VisualServer;
 
     // GraphicSettings *settings = new GraphicSettings;
