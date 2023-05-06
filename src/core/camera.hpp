@@ -9,10 +9,9 @@ namespace eng {
 class Camera {
    public:
     glm::vec3 position;
-    glm::vec3 front;
+    glm::vec3 front; // ||front|| == 1
     glm::vec3 up;
     glm::mat4 projection_matrix;
-    glm::mat4 camera_matrix;
 
     float pitch;
     float yaw;
