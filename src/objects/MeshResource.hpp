@@ -1,6 +1,5 @@
 #pragma once
 
-#include "TreeObject.hpp"
 #include "VisualServer.h"
 
 namespace eng {

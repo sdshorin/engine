@@ -11,10 +11,6 @@ glm::mat4 Camera::get_projection_matrix() const {
     return projection_matrix;
 }
 
-glm::mat4 Camera::get_camera_matrix() const {
-    glm::mat4 mat = create_camera_matrix(position, position + front, up);
-    return mat;
-}
 
 glm::mat4 create_camera_matrix(glm::vec3 position, glm::vec3 target, glm::vec3 up) {
     up = glm::normalize(up);
@@ -40,6 +36,11 @@ glm::mat4 create_camera_matrix(glm::vec3 position, glm::vec3 target, glm::vec3 u
     matrix[3][2] = -glm::dot(z_camera_dir, position);
 
     return matrix;
+}
+
+glm::mat4 Camera::get_camera_matrix() const {
+    glm::mat4 mat = create_camera_matrix(position, position + front, up);
+    return mat;
 }
 
 

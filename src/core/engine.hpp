@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "TreeObject.hpp"
+#include "Node.hpp"
 #include "VisualServer.h"
 #include "camera.hpp"
 
@@ -19,7 +19,7 @@ class Engine {
 
    public:
     VisualServer* visual_server;
-    TreeObject root;
+    Node root;
 
     static Engine& getInstance() {
         static Engine instance;

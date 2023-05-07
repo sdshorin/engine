@@ -5,7 +5,7 @@ import os
 print('..Building')
 
 ldflags = ""
-cppflags = "-std=c++0x"
+cppflags = "-std=c++14 -Wdeprecated-declarations "
 
 # scons --debug_build --use_asan
 AddOption(
@@ -100,9 +100,14 @@ else:
 env["CXXFLAGS"] = cppflags
 env["LINKFLAGS"] = ldflags
 
+# files = Glob('src/**/*.cpp') + Glob('src/**/**/*.cpp')
+
+files = Glob("src/core/*.cpp") + Glob("src/render/**/*.cpp") + Glob("src/objects/scripts/*.cpp") + ["src/objects/Node.cpp", "src/objects/Mesh.cpp", "src/objects/MeshResource.cpp"]
+
 env.Append(CPPPATH='src/core')
 env.Append(CPPPATH='src/objects')
+env.Append(CPPPATH='src/objects/scripts')
 env.Append(CPPPATH='src/render/cpu_render')
 env.Append(CPPPATH='src/render/core')
-env.Program('CPURender', Glob('src/**/*.cpp') + Glob('src/**/**/*.cpp'), LIBS=["SDL2"]) 
+env.Program('CPURender', files, LIBS=["SDL2"]) 
 

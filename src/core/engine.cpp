@@ -7,9 +7,12 @@
 #include <chrono>
 #include <iostream>
 
+#include <EmptyScript.hpp>
+
 namespace eng {
 
-Engine::Engine() {
+Engine::Engine(): root(AnyScript(EmptyScript())) {
+    // root = TreeObject();
 }
 
 void Engine::Run() {
@@ -25,6 +28,12 @@ void Engine::Run() {
         visual_server->flush();
         root.process_notification(delta / 1000);
         root.draw_notification(visual_server);
+
+        // Batcer batcher;
+        // root.draw_to(&batcher);
+        // visual_server->Render(batcher);
+
+
         visual_server->RenderScreen();
 
         auto loop_end = std::chrono::steady_clock::now();

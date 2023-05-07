@@ -16,14 +16,23 @@ MeshObject::MeshObject(MeshResource& resource_in) : resource(resource_in) {
     ProjectionShader* p_shader = new ProjectionShader;
     p_shader->model = glm::mat4(1.0f);
     shader = p_shader;
+    owner = NULL;
+}
+
+void MeshObject::set_owner(eng::Node* owner_p) {
+    owner = owner_p;
 }
 
 void MeshObject::draw(VisualServer* server) const {
     ProjectionShader* projection_shader = dynamic_cast<ProjectionShader*>(shader);
     if (projection_shader) {
-        projection_shader->model = get_world_transform();
+        projection_shader->model = owner->get_world_transform();
     }
     server->draw_mesh(resource.GetStorage(), shader);
+}
+
+void MeshObject::process(float delta) {
+
 }
 
 }   // namespace eng
