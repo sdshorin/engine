@@ -19,6 +19,19 @@ MeshObject::MeshObject(MeshResource& resource_in) : resource(resource_in) {
     owner = NULL;
 }
 
+MeshObject::MeshObject(MeshObject&& other) noexcept: resource(std::move(other.resource))  {
+    shader = std::move(other.shader);
+    owner = other.owner;
+}
+
+
+MeshObject &MeshObject::operator=(MeshObject &&other) noexcept {
+    resource = std::move(other.resource);
+    shader = std::move(other.shader);
+    owner = other.owner;
+
+}
+
 void MeshObject::set_owner(eng::Node* owner_p) {
     owner = owner_p;
 }

@@ -6,11 +6,12 @@
 
 namespace eng {
 
-Node::Node(AnyScript script): script(script) {
+Node::Node(AnyScript script_p): script(std::move(script_p)) {
     script.set_owner(this);
     transform = glm::mat4(1.0f);
     parent = NULL;
 }
+
 
 Node::~Node() {
     parent = NULL;

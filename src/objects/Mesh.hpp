@@ -14,9 +14,10 @@ class MeshObject {
 
    public:
     MeshObject(MeshResource& resource_in);
+    MeshObject(MeshObject &&) noexcept;
+    MeshObject &operator=(MeshObject &&) noexcept;
 
 
-    
     void draw(VisualServer* server) const;
     void process(float delta);
     void set_owner(eng::Node* owner);

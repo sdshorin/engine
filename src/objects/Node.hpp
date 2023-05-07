@@ -14,17 +14,18 @@ private:
     std::vector<std::unique_ptr<Node> > childrens;
     Node* parent;
     AnyScript script;
+    glm::mat4 transform;
 
     void set_parent(Node* new_parent);
 
-   protected:
-    glm::mat4 transform;
-
    public:
     Node(AnyScript script);
+
     ~Node();
-    // TreeObject &operator=(TreeObject &&) noexcept = default;
-    // TreeObject(const TreeObject &) noexcept = default;
+    Node &operator=(Node &) noexcept = delete;
+    Node &operator=(Node &&) noexcept = delete;
+    Node(Node &&) noexcept = delete;
+    Node(const Node &) noexcept = delete;
     void add_child(std::unique_ptr<Node> node);
 
     // move(glm::mat4 ) ?????
