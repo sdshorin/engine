@@ -105,8 +105,7 @@ env["LINKFLAGS"] = ldflags
 files = Glob("src/core/*.cpp") +\
         Glob("src/render/**/*.cpp") +\
         Glob("src/objects/scripts/*.cpp") +\
-        ["src/objects/Node.cpp", "src/objects/Mesh.cpp",
-        "src/objects/MeshResource.cpp", "src/objects/RotationNode.cpp"]
+        Glob("src/objects/*.cpp")
 
 env.Append(CPPPATH='src/core')
 env.Append(CPPPATH='src/objects')

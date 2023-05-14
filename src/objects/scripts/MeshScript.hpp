@@ -6,16 +6,16 @@
 #include "EmptyScript.hpp"
 namespace eng {
 
-class MeshObject: public EmptyScript {
+class MeshScript: public EmptyScript {
     // std::vector<glm::vec4> shader_info;
     // Shader sharer
     MeshResource resource;
     BaseShader* shader;
 
    public:
-    MeshObject(MeshResource& resource_in);
-    MeshObject(MeshObject &&) noexcept;
-    MeshObject &operator=(MeshObject &&) noexcept;
+    MeshScript(MeshResource& resource_in);
+    MeshScript(MeshScript &&) noexcept;
+    MeshScript &operator=(MeshScript &&) noexcept;
 
 
     void draw(VisualServer* server) const;
