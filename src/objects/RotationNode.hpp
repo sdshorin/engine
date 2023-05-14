@@ -1,15 +1,16 @@
 #pragma once
-#include "TreeObject.hpp"
+
+#include "EmptyScript.hpp"
 
 namespace eng {
 
-class RotationNode : public TreeObject {
+class RotationNode: public EmptyScript {
     glm::vec3 axis;
     float step;
 
    public:
     RotationNode(glm::vec3 axis, float step = 0.1) : axis(axis), step(step) {
     }
-    virtual void process(float delta);
+    void process(float delta);
 };
 }   // namespace eng

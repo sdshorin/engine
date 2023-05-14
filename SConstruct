@@ -5,7 +5,7 @@ import os
 print('..Building')
 
 ldflags = ""
-cppflags = "-std=c++14 -Wdeprecated-declarations "
+cppflags = "-std=c++14 -Wno-deprecated-declarations "
 
 # scons --debug_build --use_asan
 AddOption(
@@ -102,7 +102,11 @@ env["LINKFLAGS"] = ldflags
 
 # files = Glob('src/**/*.cpp') + Glob('src/**/**/*.cpp')
 
-files = Glob("src/core/*.cpp") + Glob("src/render/**/*.cpp") + Glob("src/objects/scripts/*.cpp") + ["src/objects/Node.cpp", "src/objects/Mesh.cpp", "src/objects/MeshResource.cpp"]
+files = Glob("src/core/*.cpp") +\
+        Glob("src/render/**/*.cpp") +\
+        Glob("src/objects/scripts/*.cpp") +\
+        ["src/objects/Node.cpp", "src/objects/Mesh.cpp",
+        "src/objects/MeshResource.cpp", "src/objects/RotationNode.cpp"]
 
 env.Append(CPPPATH='src/core')
 env.Append(CPPPATH='src/objects')

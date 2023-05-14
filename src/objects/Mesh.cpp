@@ -32,10 +32,6 @@ MeshObject &MeshObject::operator=(MeshObject &&other) noexcept {
 
 }
 
-void MeshObject::set_owner(eng::Node* owner_p) {
-    owner = owner_p;
-}
-
 void MeshObject::draw(VisualServer* server) const {
     ProjectionShader* projection_shader = dynamic_cast<ProjectionShader*>(shader);
     if (projection_shader) {

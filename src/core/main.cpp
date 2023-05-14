@@ -5,11 +5,15 @@
 #endif
 
 #include "Mesh.hpp"
-// #include "RotationNode.hpp"
+#include "RotationNode.hpp"
 // #include "Triangle.hpp"
 #include "engine.hpp"
 #include "Node.hpp"
 #include "EmptyScript.hpp"
+
+#define create_node(arg) std::make_unique<eng::Node>(arg);
+
+using NodeRef = std::unique_ptr<eng::Node>;
 
 int main() {
     std::srand(std::time(nullptr));
@@ -20,51 +24,39 @@ int main() {
     // GraphicSettings *settings = new GraphicSettings;
     engine.visual_server->InitGraphic();
 
-    // eng::MeshResource cube_res("objects/cube.obj");
+    eng::MeshResource cube_res("objects/cube.obj");
     eng::MeshResource teapot_res("objects/teapot.obj");
-    // // eng::MeshResource res("objects/test.obj");
-    // std::shared_ptr<eng::TreeObject> cube1 = std::make_shared<eng::MeshObject>(cube_res);
-    // std::shared_ptr<eng::TreeObject> cube2 = std::make_shared<eng::MeshObject>(cube_res);
-    // std::shared_ptr<eng::TreeObject> cube3 = std::make_shared<eng::MeshObject>(cube_res);
-    // std::shared_ptr<eng::TreeObject> cube4 = std::make_shared<eng::MeshObject>(cube_res);
-    // std::shared_ptr<eng::TreeObject> cube5 = std::make_shared<eng::MeshObject>(cube_res);
-    // std::shared_ptr<eng::TreeObject> cube6 = std::make_shared<eng::MeshObject>(cube_res);
 
-    // cube1->move(glm::vec3(2.5, 0.0, 0.0));
-    // cube2->move(glm::vec3(-2.5, 0.0, 0.0));
-    // cube3->move(glm::vec3(0, 2.5, 0.0));
-    // cube4->move(glm::vec3(0, -2.5, 0.0));
-    // cube5->move(glm::vec3(0, 0, 2.5));
-    // cube6->move(glm::vec3(0, 0, -2.5));
+    NodeRef rotated_node_cube_1 = create_node(eng::RotationNode(glm::vec3(0.0, 0, 1)));
+    std::vector<glm::vec3> offsets({{2.5, 0.0, 0.0},
+                                    {-2.5, 0.0, 0.0},
+                                    {0, 2.5, 0.0},
+                                    {0, -2.5, 0.0},
+                                    {0, 0, 2.5},
+                                    {0, 0, -2.5},
+    });
+    for (int i = 0; i < offsets.size(); ++i) {
+        NodeRef cube = create_node(eng::MeshObject(cube_res));
+        cube->move(offsets[i]);
+        rotated_node_cube_1->add_child(std::move(cube));
 
-    // std::shared_ptr<eng::TreeObject> teapot = std::make_shared<eng::MeshObject>(teapot_res);
+    }
 
-    // std::shared_ptr<eng::TreeObject> rotated_node1 = std::make_shared<eng::RotationNode>(glm::vec3(0.0, 0, 1));
-    // rotated_node1->add_child(cube1);
-    // rotated_node1->add_child(cube2);
-    // rotated_node1->add_child(cube3);
-    // rotated_node1->add_child(cube4);
-    // rotated_node1->add_child(cube5);
-    // rotated_node1->add_child(cube6);
+    NodeRef rotated_node_cube_2 = create_node(eng::RotationNode(glm::vec3(0.0, 1, 1), 0.5));
+    rotated_node_cube_2->add_child(std::move(rotated_node_cube_1));
+    rotated_node_cube_2->move(glm::vec3(0, 1.0, 0.0));
 
-    // std::shared_ptr<eng::TreeObject> rotated_node2 = std::make_shared<eng::RotationNode>(glm::vec3(0.0, 1, 1), 0.5);
-    // rotated_node2->add_child(rotated_node1);
-    // rotated_node2->move(glm::vec3(0, 1.0, 0.0));
+    engine.root.add_child(std::move(rotated_node_cube_2));
 
-    // engine.root.add_child(rotated_node2);
 
-    // std::shared_ptr<eng::TreeObject> rotated_node_teapot =
-    //     std::make_shared<eng::RotationNode>(glm::vec3(0.0, 0, 1), 0.6);
-    // std::shared_ptr<eng::TreeObject> rotated_node_teapot2 =
-    //     std::make_shared<eng::RotationNode>(glm::vec3(0.0, 1, 0), 0.3);
-    // rotated_node_teapot->add_child(rotated_node_teapot2);
-    // rotated_node_teapot2->add_child(teapot);
-    // teapot->move(glm::vec3(0.0, -1.0, 0.0));
+    NodeRef teapot = create_node(eng::MeshObject(teapot_res));
+    teapot->move(glm::vec3(0.0, -1.0, 0.0));
+    NodeRef rotated_node_teapot_1 = create_node(eng::RotationNode(glm::vec3(0.0, 0, 1), 0.6));
+    NodeRef rotated_node_teapot_2 = create_node(eng::RotationNode(glm::vec3(0.0, 1, 0), 0.3));
+    rotated_node_teapot_2->add_child(std::move(teapot));
+    rotated_node_teapot_1->add_child(std::move(rotated_node_teapot_2));
+    engine.root.add_child(std::move(rotated_node_teapot_1));
 
-    
-    std::unique_ptr<eng::Node> test = std::make_unique<eng::Node>(AnyScript(eng::MeshObject(teapot_res)));
-
-    engine.root.add_child(std::move(test));
 
     engine.Run();
 }

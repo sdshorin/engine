@@ -41,13 +41,13 @@ void Node::process_notification(float delta) {
 // void Node::draw(VisualServer* server) const {
 // }
 
-// void Node::move(const glm::vec3& direction) {
-//     glm::mat4 translation(1.0f);
-//     translation[3][0] = direction.x;
-//     translation[3][1] = direction.y;
-//     translation[3][2] = direction.z;
-//     transform = translation * transform;
-// }
+void Node::move(const glm::vec3& direction) {
+    glm::mat4 translation(1.0f);
+    translation[3][0] = direction.x;
+    translation[3][1] = direction.y;
+    translation[3][2] = direction.z;
+    transform = translation * transform;
+}
 
 glm::mat4 Node::get_world_transform() const {
     if (parent) {
