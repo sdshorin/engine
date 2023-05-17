@@ -13,6 +13,7 @@ class ShaderImplementation {
     virtual void LoadParams(const eng::BaseShader* params) = 0;
     virtual Point VertexShader(const Point& p) = 0;
     virtual glm::ivec3 FragmentShader(const Point& p) = 0;
+    virtual ~ShaderImplementation() = default;
 };
 
 class ProjectionShaderImplementation : public ShaderImplementation {

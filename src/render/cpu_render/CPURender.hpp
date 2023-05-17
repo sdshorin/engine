@@ -6,28 +6,29 @@
 #include <vector>
 
 #include "CPUVisualStorage.hpp"
-#include "GraphicSettings.hpp"
+#include "ProjectSettings.hpp"
 #include "Screen.hpp"
 #include "ShaderImplementation.hpp"
+
+
 
 namespace cpu_render {
 
 class CPURender {
-    std::vector<CPUVisualStorage*> storages;
-    std::vector<ShaderImplementation*> shader_algorithms;
+    std::vector<std::shared_ptr<const CPUVisualStorage> > storages;
     Screen screen;
     SDL_Window* window;
 
-    ShaderImplementation* GetShader(eng::BaseShader::ShaderType type);
+    std::unique_ptr<ShaderImplementation> GetShader(eng::BaseShader::ShaderType type);
     void RasterizerTriangle(ShaderImplementation* shader_imp, const Point& p_1, const Point& p_2, const Point& p_3);
 
    public:
     CPURender();
     void Flush();
-    void InitGraphic(eng::GraphicSettings* settings);
+    void InitGraphic(eng::GraphicSettings settings);
     void RenderScreen();
-    void draw_mesh(eng::BaseVisualStorage* data, const eng::BaseShader* shader_params);
-    eng::BaseVisualStorage* create_storage();
+    void draw_mesh(eng::ResourceRef data, const eng::BaseShader* shader_params);
+    eng::ResourceRef load_mesh(eng::MeshResource& mesh);
     ~CPURender();
 };
 

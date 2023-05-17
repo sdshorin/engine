@@ -1,15 +1,16 @@
 #pragma once
 
-#include "VisualServer.h"
+#include <glm/glm.hpp>
+#include <vector>
 
 namespace eng {
 
 class MeshResource {
-    BaseVisualStorage* storage;
-
    public:
+    std::vector<glm::vec3> colours;
+    std::vector<glm::vec4> triangles;
+
     MeshResource(std::string path);
-    BaseVisualStorage* GetStorage() const;
 };
 
 }   // namespace eng

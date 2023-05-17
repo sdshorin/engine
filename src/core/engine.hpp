@@ -7,6 +7,7 @@
 #include "Node.hpp"
 #include "VisualServer.h"
 #include "camera.hpp"
+#include "ProjectSettings.hpp"
 
 #define MAX_FPS 30.0
 
@@ -18,17 +19,13 @@ class Engine {
     void process_rotation(int xrel, int yrel);
 
    public:
-    VisualServer* visual_server;
+    VisualServer visual_server;
     Node root;
 
-    static Engine& getInstance() {
-        static Engine instance;
-        return instance;
-    }
-    Engine(Engine const&) = delete;
-    void operator=(Engine const&) = delete;
+    eng::ResourceRef load_resource(const std::string& path);
 
-    Engine();
+
+    Engine(const ProjectSettings& settings);
     void Run();
     void InputEvent();
     void SubscribeToInputEvents();

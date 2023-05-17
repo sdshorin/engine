@@ -6,26 +6,30 @@
 
 #include "MeshScript.hpp"
 #include "RotationScript.hpp"
-// #include "Triangle.hpp"
+
 #include "engine.hpp"
 #include "Node.hpp"
 #include "EmptyScript.hpp"
+#include "ProjectSettings.hpp"
 
 #define create_node(arg) std::make_unique<eng::Node>(arg);
 
 using NodeRef = std::unique_ptr<eng::Node>;
 
+
+
 int main() {
-    std::srand(std::time(nullptr));
+    time_t seed = std::time(nullptr);
+    std::cout << "Init with seed: " << seed << "\n";
+    std::srand(seed);
+    
+    eng::ProjectSettings settings;
+    eng::Engine engine(settings);
 
-    eng::Engine& engine = eng::Engine::getInstance();
-    engine.visual_server = new eng::VisualServer;
+    engine.visual_server.InitGraphic();
 
-    // GraphicSettings *settings = new GraphicSettings;
-    engine.visual_server->InitGraphic();
-
-    eng::MeshResource cube_res("objects/cube.obj");
-    eng::MeshResource teapot_res("objects/teapot.obj");
+    eng::ResourceRef cube_res = engine.load_resource("objects/cube.obj");
+    eng::ResourceRef teapot_res = engine.load_resource("objects/teapot.obj");
 
     NodeRef rotated_node_cube_1 = create_node(eng::RotationScript(glm::vec3(0.0, 0, 1)));
     std::vector<glm::vec3> offsets({{2.5, 0.0, 0.0},

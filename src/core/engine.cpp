@@ -8,12 +8,23 @@
 #include <iostream>
 
 #include <EmptyScript.hpp>
+#include "MeshResource.hpp"
 
 namespace eng {
 
-Engine::Engine(): root(AnyScript(EmptyScript())) {
-    // root = TreeObject();
+Engine::Engine(const ProjectSettings& settings): visual_server(settings.graphic_settings),  root(AnyScript(EmptyScript())) {
+
 }
+
+eng::ResourceRef Engine::load_resource(const std::string& path) {
+    if (path.substr(path.size() - 4) != ".obj") {
+        throw std::invalid_argument("This is not obj file");
+    }
+    MeshResource mesh(path);
+
+    return visual_server.load_mesh(mesh);
+}
+
 
 void Engine::Run() {
     bool is_running = true;
@@ -25,16 +36,16 @@ void Engine::Run() {
         if (!is_running) {
             break;
         }
-        visual_server->flush();
+        visual_server.flush();
         root.process_notification(delta / 1000);
-        root.draw_notification(visual_server);
+        root.draw_notification(&visual_server);
 
         // Batcer batcher;
         // root.draw_to(&batcher);
-        // visual_server->Render(batcher);
+        // visual_server.Render(batcher);
 
 
-        visual_server->RenderScreen();
+        visual_server.RenderScreen();
 
         auto loop_end = std::chrono::steady_clock::now();
         float used_time = delta = std::chrono::duration_cast<std::chrono::milliseconds>(loop_end - loop_start).count();
@@ -48,27 +59,27 @@ void Engine::Run() {
 
 void Engine::process_keyboard_events(const Uint8* keyboard_state, float delta) {
     if (keyboard_state[SDL_SCANCODE_W]) {
-        visual_server->camera->move(visual_server->camera->front * delta);
+        visual_server.camera.move(visual_server.camera.front * delta);
     }
     if (keyboard_state[SDL_SCANCODE_S]) {
-        visual_server->camera->move(-visual_server->camera->front * delta);
+        visual_server.camera.move(-visual_server.camera.front * delta);
     }
     if (keyboard_state[SDL_SCANCODE_A]) {
-        visual_server->camera->move_left(delta);
+        visual_server.camera.move_left(delta);
     }
     if (keyboard_state[SDL_SCANCODE_D]) {
-        visual_server->camera->move_right(delta);
+        visual_server.camera.move_right(delta);
     }
     if (keyboard_state[SDL_SCANCODE_Q]) {
-        visual_server->camera->move_up(delta);
+        visual_server.camera.move_up(delta);
     }
     if (keyboard_state[SDL_SCANCODE_E]) {
-        visual_server->camera->move_down(delta);
+        visual_server.camera.move_down(delta);
     }
 }
 
 void Engine::process_rotation(int xrel, int yrel) {
-    visual_server->camera->rotate(xrel, -yrel);
+    visual_server.camera.rotate(xrel, -yrel);
 }
 
 bool Engine::process_events(float delta) {

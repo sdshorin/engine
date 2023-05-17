@@ -12,32 +12,21 @@
 
 namespace eng {
 
-MeshScript::MeshScript(MeshResource& resource_in) : resource(resource_in) {
-    ProjectionShader* p_shader = new ProjectionShader;
+MeshScript::MeshScript(ResourceRef resource_in) : resource(resource_in) {
+    std::unique_ptr<ProjectionShader> p_shader = std::make_unique<ProjectionShader>();
     p_shader->model = glm::mat4(1.0f);
-    shader = p_shader;
+    shader = std::move(p_shader);
     owner = NULL;
 }
 
-MeshScript::MeshScript(MeshScript&& other) noexcept: resource(std::move(other.resource))  {
-    shader = std::move(other.shader);
-    owner = other.owner;
-}
 
-
-MeshScript &MeshScript::operator=(MeshScript &&other) noexcept {
-    resource = std::move(other.resource);
-    shader = std::move(other.shader);
-    owner = other.owner;
-
-}
 
 void MeshScript::draw(VisualServer* server) const {
-    ProjectionShader* projection_shader = dynamic_cast<ProjectionShader*>(shader);
+    ProjectionShader* projection_shader = dynamic_cast<ProjectionShader*>(shader.get());
     if (projection_shader) {
         projection_shader->model = owner->get_world_transform();
     }
-    server->draw_mesh(resource.GetStorage(), shader);
+    server->draw_mesh(resource, shader.get());
 }
 
 void MeshScript::process(float delta) {

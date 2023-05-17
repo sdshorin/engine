@@ -7,15 +7,11 @@
 namespace eng {
 
 class MeshScript: public EmptyScript {
-    // std::vector<glm::vec4> shader_info;
-    // Shader sharer
-    MeshResource resource;
-    BaseShader* shader;
+    ResourceRef resource;
+    std::unique_ptr<BaseShader> shader;
 
    public:
-    MeshScript(MeshResource& resource_in);
-    MeshScript(MeshScript &&) noexcept;
-    MeshScript &operator=(MeshScript &&) noexcept;
+    MeshScript(ResourceRef resource_in);
 
 
     void draw(VisualServer* server) const;

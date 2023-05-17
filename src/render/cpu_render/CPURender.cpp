@@ -96,14 +96,14 @@ int ClipTriangle(const std::array<Point, 3>& p, std::array<Point, 4>& clipped_p,
     return last_processed_index;
 }
 
-void CPURender::draw_mesh(eng::BaseVisualStorage* data, const eng::BaseShader* shader_params) {
-    ShaderImplementation* shader_imp = GetShader(shader_params->type);
+void CPURender::draw_mesh(eng::ResourceRef data, const eng::BaseShader* shader_params) {
+    std::unique_ptr<ShaderImplementation> shader_imp = GetShader(shader_params->type);
     if (!shader_imp) {
         throw std::invalid_argument("Can't find shader");
     }
     shader_imp->LoadParams(shader_params);
 
-    CPUVisualStorage* store = dynamic_cast<CPUVisualStorage*>(data);
+    const CPUVisualStorage* store = (dynamic_cast<const CPUVisualStorage*>(data.get()));
     if (!store) {
         std::cout << "VisualServer wrong storage! \n";
     }
@@ -136,10 +136,10 @@ void CPURender::draw_mesh(eng::BaseVisualStorage* data, const eng::BaseShader* s
         }
 
         if (filled_points == 3) {
-            RasterizerTriangle(shader_imp, clipped_p[0], clipped_p[1], clipped_p[2]);
+            RasterizerTriangle(shader_imp.get(), clipped_p[0], clipped_p[1], clipped_p[2]);
         } else if (filled_points == 4) {
-            RasterizerTriangle(shader_imp, clipped_p[0], clipped_p[1], clipped_p[2]);
-            RasterizerTriangle(shader_imp, clipped_p[0], clipped_p[2], clipped_p[3]);
+            RasterizerTriangle(shader_imp.get(), clipped_p[0], clipped_p[1], clipped_p[2]);
+            RasterizerTriangle(shader_imp.get(), clipped_p[0], clipped_p[2], clipped_p[3]);
         }
     }
 }
@@ -190,11 +190,12 @@ void CPURender::RasterizerTriangle(ShaderImplementation* shader_imp, const Point
     }
 }
 
-eng::BaseVisualStorage* CPURender::create_storage() {
-    CPUVisualStorage* store = new CPUVisualStorage;
-    storages.push_back(store);
-    return store;
+eng::ResourceRef CPURender::load_mesh(eng::MeshResource& mesh) {
+    std::shared_ptr<CPUVisualStorage> res = std::make_shared<CPUVisualStorage>(mesh);
+    storages.push_back(res);
+    return res;
 }
+
 
 void CPURender::Flush() {
     for (int i = 0; i < screen.window_width * screen.window_high; ++i) {
@@ -203,12 +204,12 @@ void CPURender::Flush() {
     }
 }
 
-void CPURender::InitGraphic(eng::GraphicSettings* settings) {
+void CPURender::InitGraphic(eng::GraphicSettings settings) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         printf("error initializing SDL: %s\n", SDL_GetError());
     }
-    screen = Screen(settings->window_high, settings->window_width);
-    window = SDL_CreateWindow(settings->window_name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+    screen = Screen(settings.window_high, settings.window_width);
+    window = SDL_CreateWindow(settings.window_name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                               screen.window_width, screen.window_high, SDL_WINDOW_SHOWN);
 
     SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -231,7 +232,6 @@ void CPURender::RenderScreen() {
 }
 
 CPURender::CPURender() {
-    shader_algorithms.push_back(new ProjectionShaderImplementation);
 }
 
 CPURender::~CPURender() {
@@ -240,11 +240,9 @@ CPURender::~CPURender() {
     SDL_Quit();
 }
 
-ShaderImplementation* CPURender::GetShader(eng::BaseShader::ShaderType type) {
-    for (ShaderImplementation* shader : shader_algorithms) {
-        if (shader->type == type) {
-            return shader;
-        }
+std::unique_ptr<ShaderImplementation> CPURender::GetShader(eng::BaseShader::ShaderType type) {
+    if (type == eng::BaseShader::ShaderType::ShaderPosition) {
+        return std::make_unique<ProjectionShaderImplementation>();
     }
     return NULL;
 }

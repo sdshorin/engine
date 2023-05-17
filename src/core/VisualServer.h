@@ -14,21 +14,24 @@
 
 namespace eng {
 
+using ResourceRef = std::shared_ptr<const BaseVisualStorage>;
+
 class BaseRender {};
 
 class VisualServer {
-    GraphicSettings* settings;
-    cpu_render::CPURender* render;
+    GraphicSettings settings;
+    std::unique_ptr<cpu_render::CPURender> render;
 
    public:
-    Camera* camera;
-    VisualServer();
+    Camera camera;
+    VisualServer(GraphicSettings settings);
 
     void InitGraphic();
     void flush();
     void RenderScreen();
-    void draw_mesh(BaseVisualStorage* data, BaseShader* shader);
-    BaseVisualStorage* create_storage();
+    void draw_mesh(ResourceRef data, BaseShader* shader);
+    ResourceRef load_mesh(eng::MeshResource& mesh);
+
 };
 
 }   // namespace eng
