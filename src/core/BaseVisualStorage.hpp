@@ -2,6 +2,10 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+#if __linux__
+#include <memory>
+#endif
+
 namespace eng {
 
 

@@ -3,6 +3,10 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+#if __linux__
+#include <string>
+#endif
+
 namespace eng {
 
 class MeshResource {
