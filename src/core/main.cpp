@@ -6,6 +6,7 @@
 
 #include "MeshScript.hpp"
 #include "RotationScript.hpp"
+#include "SqueezeScript.hpp"
 
 #include "engine.hpp"
 #include "Node.hpp"
@@ -46,18 +47,25 @@ int main() {
 
     }
 
+    NodeRef squeeze_cubes = create_node(eng::SqueezeScript({0.1, 0.6, 0.3}, 1));
+
     NodeRef rotated_node_cube_2 = create_node(eng::RotationScript(glm::vec3(0.0, 1, 1), 0.5));
-    rotated_node_cube_2->add_child(std::move(rotated_node_cube_1));
+
+    squeeze_cubes->add_child(std::move(rotated_node_cube_1));
+    rotated_node_cube_2->add_child(std::move(squeeze_cubes));
     rotated_node_cube_2->move(glm::vec3(0, 1.0, 0.0));
 
     engine.root.add_child(std::move(rotated_node_cube_2));
 
 
     NodeRef teapot = create_node(eng::MeshScript(teapot_res));
+    NodeRef squeeze = create_node(eng::SqueezeScript({0.5, 0.5, 0.5}, 2));
+
     teapot->move(glm::vec3(0.0, -1.0, 0.0));
     NodeRef rotated_node_teapot_1 = create_node(eng::RotationScript(glm::vec3(0.0, 0, 1), 0.6));
     NodeRef rotated_node_teapot_2 = create_node(eng::RotationScript(glm::vec3(0.0, 1, 0), 0.3));
-    rotated_node_teapot_2->add_child(std::move(teapot));
+    squeeze->add_child(std::move(teapot));
+    rotated_node_teapot_2->add_child(std::move(squeeze));
     rotated_node_teapot_1->add_child(std::move(rotated_node_teapot_2));
     engine.root.add_child(std::move(rotated_node_teapot_1));
 
