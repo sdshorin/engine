@@ -49,6 +49,14 @@ void Node::move(const glm::vec3& direction) {
     transform = translation * transform;
 }
 
+void Node::scale(const glm::vec3& scale) {
+    glm::mat4 translation(1.0f);
+    translation[0][0] = scale.x;
+    translation[1][1] = scale.y;
+    translation[2][2] = scale.z;
+    transform = translation * transform;
+}
+
 glm::mat4 Node::get_world_transform() const {
     if (parent) {
         return parent->get_world_transform() * transform;
