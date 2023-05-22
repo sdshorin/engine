@@ -56,6 +56,7 @@ void add_dynamic_scene(eng::Engine& engine, eng::ResourceRef cube_res, eng::Reso
 
     teapot->move(glm::vec3(0.0, -1.0, 0.0));
     NodeRef rotated_node_teapot_1 = create_node(eng::RotationScript(glm::vec3(0.0, 0, 1), 0.6));
+    rotated_node_teapot_1->move(glm::vec3(1.0, 0.0, 0.0));
     NodeRef rotated_node_teapot_2 = create_node(eng::RotationScript(glm::vec3(0.0, 1, 0), 0.3));
     squeeze->add_child(std::move(teapot));
     rotated_node_teapot_2->add_child(std::move(squeeze));
