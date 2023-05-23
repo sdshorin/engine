@@ -10,10 +10,10 @@
 #include <fstream>
 #include <string>
 
-namespace eng {
+namespace scripts {
 
-MeshScript::MeshScript(ResourceRef resource_in) : resource(resource_in) {
-    std::unique_ptr<ProjectionShader> p_shader = std::make_unique<ProjectionShader>();
+MeshScript::MeshScript(eng::ResourceRef resource_in) : resource(resource_in) {
+    std::unique_ptr<eng::ProjectionShader> p_shader = std::make_unique<eng::ProjectionShader>();
     p_shader->model = glm::mat4(1.0f);
     shader = std::move(p_shader);
     owner = NULL;
@@ -21,8 +21,8 @@ MeshScript::MeshScript(ResourceRef resource_in) : resource(resource_in) {
 
 
 
-void MeshScript::draw(VisualServer* server) const {
-    ProjectionShader* projection_shader = dynamic_cast<ProjectionShader*>(shader.get());
+void MeshScript::draw(eng::VisualServer* server) const {
+    eng::ProjectionShader* projection_shader = dynamic_cast<eng::ProjectionShader*>(shader.get());
     if (projection_shader) {
         projection_shader->model = owner->get_world_transform();
     }
@@ -33,4 +33,4 @@ void MeshScript::process(float delta) {
 
 }
 
-}   // namespace eng
+}   // namespace scripts

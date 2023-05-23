@@ -4,18 +4,18 @@
 #include "Shaders.hpp"
 #include "Node.hpp"
 #include "EmptyScript.hpp"
-namespace eng {
+namespace scripts {
 
 class MeshScript: public EmptyScript {
-    ResourceRef resource;
-    std::unique_ptr<BaseShader> shader;
+    eng::ResourceRef resource;
+    std::unique_ptr<eng::BaseShader> shader;
 
    public:
-    MeshScript(ResourceRef resource_in);
+    MeshScript(eng::ResourceRef resource_in);
 
 
-    void draw(VisualServer* server) const;
+    void draw(eng::VisualServer* server) const;
     void process(float delta);
 };
 
-}   // namespace eng
+}   // namespace scripts

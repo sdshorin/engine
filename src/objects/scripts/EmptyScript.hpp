@@ -2,15 +2,15 @@
 #include <VisualServer.h>
 #include "Node.hpp"
 
-namespace eng {
+namespace scripts {
 
 class EmptyScript {
 protected:
-    Node* owner;
+    eng::Node* owner;
 public:
     virtual void process(float delta);
     virtual void draw(eng::VisualServer* server) const;
     virtual void set_owner(eng::Node* owner);
 };
 
-}   // namespace eng
+}   // namespace scripts

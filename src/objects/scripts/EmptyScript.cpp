@@ -1,7 +1,7 @@
 
 #include "EmptyScript.hpp"
 
-namespace eng {
+namespace scripts {
 
 void EmptyScript::process(float delta) {
 }
@@ -13,4 +13,4 @@ void EmptyScript::set_owner(eng::Node* owner_in) {
     owner = owner_in;
 }
 
-}   // namespace eng
+}   // namespace scripts

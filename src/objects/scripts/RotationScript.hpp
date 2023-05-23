@@ -2,7 +2,7 @@
 
 #include "EmptyScript.hpp"
 
-namespace eng {
+namespace scripts {
 
 class RotationScript: public EmptyScript {
     glm::vec3 axis;
@@ -13,4 +13,4 @@ class RotationScript: public EmptyScript {
     }
     void process(float delta);
 };
-}   // namespace eng
+}   // namespace scripts

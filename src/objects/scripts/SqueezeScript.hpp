@@ -2,7 +2,7 @@
 
 #include "EmptyScript.hpp"
 
-namespace eng {
+namespace scripts {
 
 class SqueezeScript: public EmptyScript {
     glm::vec3 sensitivity;
@@ -14,4 +14,4 @@ class SqueezeScript: public EmptyScript {
     }
     void process(float delta);
 };
-}   // namespace eng
+}   // namespace scripts

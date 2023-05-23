@@ -2,7 +2,7 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
-namespace eng {
+namespace scripts {
 
 void RotationScript::process(float delta) {
     float rotated_radians = 3.14f * delta * step;
@@ -11,4 +11,4 @@ void RotationScript::process(float delta) {
     owner->transform = rotationMatrix * owner->transform;
 }
 
-}   // namespace eng
+}   // namespace scripts

@@ -12,7 +12,7 @@
 
 namespace eng {
 
-Engine::Engine(const ProjectSettings& settings): visual_server(settings.graphic_settings),  root(AnyScript(EmptyScript())) {
+Engine::Engine(const ProjectSettings& settings): visual_server(settings.graphic_settings),  root(AnyScript(scripts::EmptyScript())) {
 
 }
 

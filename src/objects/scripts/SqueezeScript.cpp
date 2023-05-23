@@ -2,7 +2,7 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
-namespace eng {
+namespace scripts {
 
 void SqueezeScript::process(float delta) {
 
@@ -17,4 +17,4 @@ void SqueezeScript::process(float delta) {
     owner->transform = translation;
 }
 
-}   // namespace eng
+}   // namespace scripts
