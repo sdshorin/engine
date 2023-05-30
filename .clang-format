@@ -1,0 +1,19 @@
+# options: https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+
+
+BasedOnStyle: Google
+IndentWidth: 4
+ColumnLimit: 120
+UseTab: Never
+UseCRLF: false
+
+
+Language: Cpp
+Standard: c++17 
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+SpaceAfterCStyleCast: false
+
+AlignTrailingComments: true
+SpacesBeforeTrailingComments: 3
+AlignConsecutiveMacros: Consecutive

@@ -1,0 +1,277 @@
+@startuml
+
+package "eng" {
+  class Engine {
+    -process_events(delta: float): bool
+    -process_keyboard_events(keyboard_state: const Uint8*, delta: float): void
+    -process_rotation(xrel: int, yrel: int): void
+    -{static} MAX_FPS: const double = 30.0
+    +visual_server: VisualServer
+    +root: Node
+    +load_resource(path: const std::string&): eng::ResourceRef
+    +Engine(settings: const ProjectSettings&)
+    +Run(): void
+    +InputEvent(): void
+    +SubscribeToInputEvents(): void
+  }
+
+class ProjectSettings {
+    +graphic_settings: GraphicSettings
+}
+ class GraphicSettings {
+    +window_high: int = 600
+    +window_width: int = 800
+    +window_name: std::string = "Graphics Engine"
+}
+
+  class VisualServer {
+    -settings: GraphicSettings
+    -render: std::unique_ptr<cpu_render::CPURender>
+    +camera: Camera
+    +VisualServer(settings: GraphicSettings)
+    +InitGraphic(): void
+    +flush(): void
+    +RenderScreen(): void
+    +draw_mesh(data: ResourceRef, shader: BaseShader*): void
+    +load_mesh(mesh: eng::MeshResource&): ResourceRef
+    ..
+    using ResourceRef = std::shared_ptr<const BaseVisualStorage>;
+  }
+
+ Engine ..> ProjectSettings: dependency
+ 
+
+class Node {
+  -childrens: std::vector<std::unique_ptr<Node> >
+  -parent: Node*
+  -set_parent(new_parent: Node*): void
+  +transform: glm::mat4
+  +script: AnyScript
+  +Node(script: AnyScript)
+  +~Node(): void
+  +operator=(Node &): Node& {method} noexcept = delete
+  +operator=(Node &&): Node& {method} noexcept = delete
+  +Node(Node &&): {method} noexcept = delete
+  +Node(const Node &): {method} noexcept = delete
+  +add_child(node: std::unique_ptr<Node>): void
+  +move(offset: const glm::vec3&): void
+  +scale(scale: const glm::vec3&): void
+  +draw_notification(server: VisualServer*) const: void
+  +process_notification(delta: float): void
+  +get_world_transform() const: glm::mat4
+}
+
+class Camera {
+  +position: glm::vec3
+  +front: glm::vec3
+  +up: glm::vec3
+  +projection_matrix: glm::mat4
+  +pitch: float
+  +yaw: float
+  +speed: float
+  +Camera(): void
+  +get_projection_matrix() const: glm::mat4
+  +get_camera_matrix() const: glm::mat4
+  +rotate(xrel: int, yrel: int): void
+  +move(offset: glm::vec3): void
+  +move_right(delta: float): void
+  +move_left(delta: float): void
+  +move_down(delta: float): void
+  +move_up(delta: float): void
+}
+
+
+
+
+enum ShaderType {
+    ShaderPosition
+    ShaderColor
+    ShaderLight
+    ShaderMaterial
+  }
+  
+  class BaseShader {
+    +type: ShaderType
+    +BaseShader(type_in: ShaderType): void
+    +~BaseShader(): virtual
+  }
+  
+  class ProjectionShader {
+    +projection_matrix: glm::mat4
+    +camera_matrix: glm::mat4
+    +model: glm::mat4
+    +ProjectionShader(): void
+  }
+
+    class MeshResource {
+    +colours: std::vector<glm::vec3>
+    +triangles: std::vector<glm::vec4>
+    +MeshResource(path: std::string): void
+  }
+
+Engine *-- VisualServer: composition
+Engine *-- Node: composition
+
+VisualServer *-- Camera: composition
+
+VisualServer ..> BaseShader: dependency
+VisualServer ..> GraphicSettings: dependency
+Node *-- Node: composition
+GraphicSettings -[hidden]- Engine
+Node ..> VisualServer: dependency
+ProjectSettings *-- GraphicSettings: composition
+ProjectionShader --|> BaseShader
+' ShaderColor --|> ProjectionShader
+VisualServer ..> MeshResource: dependency
+
+abstract class BaseVisualStorage {
+  +~BaseVisualStorage(): virtual = default
+}
+
+}
+
+
+package "cpu_render" {
+  class CPUVisualStorage {
+    +data: std::vector<Point>
+    +CPUVisualStorage(res: eng::MeshResource&): void
+    +~CPUVisualStorage(): virtual = default
+    +load_pos(data: const std::vector<glm::vec4>&): void
+    +load_colour(data: const std::vector<glm::vec3>&): void
+  }
+  class CPURender {
+    -storages: std::vector<std::shared_ptr<const CPUVisualStorage> >
+    -screen: Screen
+    -window: SDL_Window*
+    -GetShader(type: eng::BaseShader::ShaderType): std::unique_ptr<ShaderImplementation>
+    -RasterizerTriangle(shader_imp: ShaderImplementation*, p_1: const Point&, p_2: const Point&, p_3: const Point&): void
+    +CPURender(): void
+    +Flush(): void
+    +InitGraphic(settings: eng::GraphicSettings): void
+    +RenderScreen(): void
+    +draw_mesh(data: eng::ResourceRef, shader_params: const eng::BaseShader*): void
+    +load_mesh(mesh: eng::MeshResource&): eng::ResourceRef
+    +~CPURender(): void
+  }
+  class Point {
+    +pos: glm::vec4
+    +colour: glm::vec3
+    +norm: glm::vec3
+    +uv: glm::vec2
+    +Point(): void
+    +operator*(x: float) const: Point
+    +operator+(p: const Point&) const: Point
+  }
+  class Screen {
+    +frame_buffer: int32_t*
+    +z_buffer: float*
+    +window_high: int
+    +window_width: int
+    +Screen(): void
+    +operator=(other: Screen&&): Screen&
+    +Screen(window_high: int, window_width: int): void
+    +~Screen(): void
+  }
+
+  class ShaderImplementation {
+    +type: eng::BaseShader::ShaderType
+    +LoadParams(params: const eng::BaseShader*): virtual void
+    +VertexShader(p: const Point&): virtual Point
+    +FragmentShader(p: const Point&): virtual glm::ivec3
+    +~ShaderImplementation(): virtual
+  }
+  
+  class ProjectionShaderImplementation {
+    +projection_matrix: glm::mat4
+    +camera_matrix: glm::mat4
+    +model: glm::mat4
+    +ProjectionShaderImplementation(): void
+    +LoadParams(params: const eng::BaseShader*): virtual void
+    +VertexShader(p: const Point&): virtual Point
+    +FragmentShader(p: const Point&): virtual glm::ivec3
+  }
+
+  CPUVisualStorage --|> BaseVisualStorage
+  CPUVisualStorage *-- "std::vector" Point: composition
+  CPURender *-- Screen: composition
+  ProjectionShaderImplementation --|> ShaderImplementation
+  CPURender *-- ShaderImplementation: composition
+  CPURender *-- CPUVisualStorage : Composition
+  BaseVisualStorage -[hidden]- MeshResource
+  ' CPUVisualStorage -[hidden]- MeshResource
+}
+
+
+package "scripts" {
+  class EmptyScript {
+    -owner: eng::Node*
+    +process(delta: float): virtual void
+    +draw(server: eng::VisualServer*): virtual const void
+    +set_owner(owner: eng::Node*): virtual void
+  }
+  
+  class MeshScript {
+    +resource: eng::ResourceRef
+    +shader: std::unique_ptr<eng::BaseShader>
+    +MeshScript(resource_in: eng::ResourceRef): void
+    +draw(server: eng::VisualServer*): const void
+    +process(delta: float): void
+  }
+
+  class RotationScript {
+    +axis: glm::vec3
+    +step: float
+    +RotationScript(axis: glm::vec3, step: float): void
+    +process(delta: float): void
+  }
+
+  class SqueezeScript {
+    +sensitivity: glm::vec3
+    +time: float
+    +speed: float
+    +SqueezeScript(sensitivity: glm::vec3, speed: float): void
+    +process(delta: float): void
+  }
+  MeshScript --|> EmptyScript
+  RotationScript --|> EmptyScript
+  SqueezeScript --|> EmptyScript
+
+}
+
+
+class AnyScript {
+  -ptr: std::unique_ptr<BaseContent>
+  +AnyScript(T x): template
+  +AnyScript(AnyScript &&other) noexcept: void
+  +operator=(AnyScript &&) noexcept: AnyScript &
+  +process(delta: float): void
+  +draw(server: eng::VisualServer*): void
+  +set_owner(owner: eng::Node*): void
+  +~AnyScript() = default
+}
+
+class BaseContent {
+  +~BaseContent(): virtual
+  +process(delta: float): virtual void
+  +draw(server: eng::VisualServer*): virtual void
+  +set_owner(owner: eng::Node*): virtual void
+}
+
+class Content {
+  -object: T
+  +Content(T x): void
+  +process(delta: float): void
+  +draw(server: eng::VisualServer*): void
+  +set_owner(owner: eng::Node*): void
+}
+
+AnyScript *-- BaseContent: aggregation
+BaseContent <|-- Content: inheritance
+Node *-- AnyScript: composition
+
+
+VisualServer *-- CPURender: composition
+
+CPURender ..> MeshResource: dependency
+
+@enduml
